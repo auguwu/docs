@@ -20,25 +20,10 @@
  * SOFTWARE.
  */
 
-// Credit: https://github.com/reactjs/express-react-views
-import DOMServer from 'react-dom/server';
-import React from 'react';
+import { Request, Response } from 'express';
+import { Server } from '../Server';
+import { Route } from '../Routing';
 
-/**
- * Function to add .tsx bindings to the website
- */
-export default (function createReactEngine() {
-  return (filename: string, props: { [x: string]: any }, cb: (error: Error | null, markup?: string) => void) => {
-    let markup = '<!DOCTYPE html>';
-    
-    try {
-      const component = require(filename);
-      if (!component.default) return cb(new Error('All components must be use "export default"'));
-      markup += DOMServer.renderToStaticMarkup(React.createElement(component.default, props));
-    } catch(ex) {
-      return cb(ex);
-    }
-
-    return cb(null, markup);
-  };
-})();
+export default async function onRequest(this: Server, route: Route, req: Request, res: Response) {
+  return 0;
+}

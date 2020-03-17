@@ -20,3 +20,55 @@
  * SOFTWARE.
  */
 
+import { Request, Response } from 'express';
+import { Collection } from '@augu/immutable';
+import Server from './Server';
+
+/** Object of all options for `Route` */
+interface RouteOptions {
+  /** The function to run the route */
+  exec(this: Server, req: Request, res: Response): Promise<any>;
+
+  /** The route itself */
+  route: string;
+}
+
+export class Route {
+  public callee: ((this: Server, req: Request, res: Response) => Promise<any>);
+  public route: string;
+
+  /**
+   * Constructs a new `Route` instance
+   * @param options Any additional options
+   */
+  constructor(options: RouteOptions) {
+    this.callee = options.exec;
+    this.route = options.route;
+  }
+}
+
+export class Router {
+  public avaliable: Collection<Route>;
+  public route: string;
+
+  /**
+   * Creates a new `Router` instance
+   * @param route The main path to use
+   */
+  constructor(route: string) {
+    this.avaliable = new Collection();
+    this.route = route;
+  }
+
+  /**
+   * Adds the route to the main collection
+   * @param route The route to inject
+   */
+  addRoute(route: Route) {
+    const path = route.route === '/' ? this.route : `${this.route === '/' ? '' : this.route}${route.route}`;
+    route.route = path; // Update the route with the injected route from the router
+
+    this.avaliable.set(path, route);
+    return this;
+  }
+}

@@ -111,7 +111,7 @@ export function getContributorsFromFile(filepath: string) {
   const data = res.json<any[] | { error: string; statusCode: number; message: string; }>();
   if (data instanceof Object && (<any> data).error) return [];
 
-  return (<any[]> data).map(x => x.commit.author);
+  return (<any[]> data).map(x => x.commit);
 }
 
 /**
@@ -165,9 +165,10 @@ export function getContributorCommits(author: string) {
   });
 
   request.end(); // End the request
-  const data = res.json<any[]>();
+  const data = res.json<any[] | { error: string; statusCode: number; message: string; }>();
+  if (data instanceof Object && (<any> data).error) return [];
 
-  return data.filter(x => x.commit.author.html_url === author).length;
+  return (<any[]> data).filter(x => x.commit.author.html_url === author).length;
 }
 
 export * from './Constants';
