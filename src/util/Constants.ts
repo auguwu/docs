@@ -20,3 +20,10 @@
  * SOFTWARE.
  */
 
+const pkg = require('../../package.json');
+
+/** Returns the GitHub url */
+export const GITHUB: string = 'https://github.com/auguwu/docs';
+
+/** Returns the version of the documentation site */
+export const VERSION: string = pkg.version;
