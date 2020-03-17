@@ -20,3 +20,63 @@
  * SOFTWARE.
  */
 
+import { Router, Route } from '../structures/Routing';
+import { safeLoad } from 'js-yaml';
+import * as utils from '../util';
+import fs from 'fs';
+
+/** Interface for the documentation config */
+interface DocumentationConfig {
+  /** A list of categories for the sidebar */
+  categories: string[];
+
+  /** The title of the document */
+  title: string;
+
+  /** A list of pages */
+  pages: {
+    [x: string]: Page;
+  }
+}
+
+/** Represents a documentation page */
+interface Page {
+  /** The title of the document */
+  title: string;
+
+  /** The page path */
+  page: string;
+}
+
+const router = new Router('/');
+const config = safeLoad<DocumentationConfig>(fs.readFileSync(utils.getArbitrayPath('documentation', 'config.yml'), 'utf8'));
+
+// GET /
+router.addRoute(new Route({
+  route: '/',
+  async exec(_, res) {
+    return res.render('index', {
+      categories: config.categories,
+      title: 'Homepage'
+    });
+  }
+}));
+
+// All of the pages
+for (const [route, page] of Object.entries(config.pages)) {
+  if (route === '/') continue; // Skip that due to the router already having that
+  router.addRoute(new Route({
+    route,
+    async exec(_, res) {
+      const path = page.page.replace('./', utils.getArbitrayPath('documentation'));
+      return res.render('documentation', {
+        page: {
+          title: page.title,
+          path
+        }
+      });
+    }
+  }));
+}
+
+export default router;

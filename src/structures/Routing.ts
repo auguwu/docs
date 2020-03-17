@@ -22,7 +22,7 @@
 
 import { Request, Response } from 'express';
 import { Collection } from '@augu/immutable';
-import Server from './Server';
+import { Server } from './Server';
 
 /** Object of all options for `Route` */
 interface RouteOptions {
