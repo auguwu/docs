@@ -1,0 +1,86 @@
+title: 'Documentation | ${title}'
+categories:
+  - eris-commando
+  - Laffey
+pages:
+  "/":
+    title: 'Home'
+    page: './index.md'
+  "/eris-commando":
+    title: 'eris-commando'
+    page: './eris-commando/index.md'
+  "/eris-commando/classes":
+    title: 'Classes'
+    page: './eris-commando/classes.md'
+  "/eris-commando/typedefs":
+    title: 'Type Definitions'
+    page: './eris-commando/typedefs.md'
+  "/eris-commando/constants":
+    title: 'Constants'
+    page: './eris-commando/constants.md'
+  "/eris-commando/classes/Collection":
+    title: 'class Collection<K, V>'
+    page: './eris-commando/classes/Collection.md'
+  "/eris-commando/classes/CommandoClient":
+    title: 'class CommandoClient'
+    page: './eris-commando/classes/Client.md'
+  "/eris-commando/classes/Command":
+    title: 'class Command'
+    page: './eris-commando/classes/Command.md'
+  "/eris-commando/classes/Event":
+    title: 'class Event'
+    page: './eris-commando/classes/Event.md'
+  "/eris-commando/classes/CommandMessage":
+    title: 'class CommandMessage'
+    page: './eris-commando/classes/CommandMessage.md'
+  "/eris-commando/classes/MessageCollector":
+    title: 'class MessageCollector'
+    page: './eris-commando/classes/MessageCollector.md'
+  "/eris-commando/classes/Task":
+    title: 'class Task'
+    page: './eris-commando/classes/Task.md'
+  "/eris-commando/typedefs/CommandoClientOptions":
+    title: 'struct ClientOptions'
+    page: './eris-commando/typedefs/CommandoClientOptions.md'
+  "/eris-commando/typedefs/CommandMeta":
+    title: 'struct CommandMeta'
+    page: './eris-commando/typedefs/CommandMeta.md'
+  "/eris-commando/typedefs/EventMeta":
+    title: 'struct EventMeta'
+    page: './eris-commando/typedefs/EventMeta.md'
+  "/eris-commando/typedefs/MessageCollectorOptions":
+    title: 'struct MessageCollectorOptions'
+    page: './eris-commando/typedefs/MessageCollectorOptions.md'
+  "/eris-commando/typedefs/TaskMeta":
+    title: 'struct TaskMeta'
+    page: './eris-commando/typedefs/TaskMeta.md'
+  "/laffey":
+    title: 'Laffey'
+    page: './laffey/index.md'
+  "/laffey/classes":
+    title: 'Classes'
+    page: './laffey/classes.md'
+  "/laffey/typedefs":
+    title: 'Type Definitions'
+    page: './laffey/typedefs.md'
+  "/laffey/constants":
+    title: 'Constants'
+    page: './laffey/constants.md'
+  "/laffey/storages":
+    title: 'Storage Units'
+    page: './laffey/storages.md'
+  "/laffey/classes/Laffey":
+    title: 'class Laffey'
+    page: './laffey/classes/Laffey.md'
+  "/laffey/classes/Storage":
+    title: 'class Storage'
+    page: './laffey/classes/Storages.md'
+  "/laffey/storages/RedisStorage":
+    title: 'class RedisStorage'
+    page: './laffey/classes/RedisStorage.md'
+  "/laffey/storages/MemoryStorage":
+    title: 'class MemoryStorage'
+    page: './laffey/storages/MemoryStorage.md'
+  "/laffey/typedefs/Options":
+    title: 'struct Options'
+    page: './laffey/typedefs/Options.md'
