@@ -16,8 +16,8 @@
     "js-yaml": "3.13.1",
     "leeks.js": "0.0.8",
     "marked": "0.8.0",
-    "react": "16.13.0",
-    "react-dom": "16.13.0"
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
   },
   "devDependencies": {
     "@augu/eslint-config": "1.3.3",
