@@ -10,7 +10,7 @@
     "build": "node ./scripts/build.js"
   },
   "dependencies": {
-    "@augu/immutable": "0.1.6",
+    "@augu/immutable": "0.1.7",
     "cors": "2.8.5",
     "express": "4.17.1",
     "js-yaml": "3.13.1",
