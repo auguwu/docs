@@ -8,11 +8,11 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: august
+          username: root
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            cd docs
+            cd /home/august/docs
             git pull
             rm -fr node_modules && rm yarn.lock
             yarn
