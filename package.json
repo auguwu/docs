@@ -1,38 +1,16 @@
 {
   "name": "docs.augu.dev",
-  "description": "✏️ Documentation site for my projects",
+  "description": "✏️ Documentation site for my projects using Vuepress",
   "private": true,
   "version": "1.0.0",
   "author": "August <root@augu.dev>",
   "homepage": "https://docs.augu.dev",
   "bugs": "https://github.com/auguwu/docs/issues",
   "scripts": {
-    "build": "node ./scripts/build.js"
-  },
-  "dependencies": {
-    "@augu/immutable": "0.1.6",
-    "cors": "2.8.5",
-    "express": "4.17.1",
-    "js-yaml": "3.13.1",
-    "leeks.js": "0.0.8",
-    "marked": "0.8.0",
-    "react": "16.13.0",
-    "react-dom": "16.13.0"
+    "build": "npx vuepress build docs",
+    "dev": "npx vuepress dev docs"
   },
   "devDependencies": {
-    "@augu/eslint-config": "1.3.3",
-    "@augu/sysinfo": "0.2.0",
-    "@types/cors": "2.8.6",
-    "@types/express": "4.17.3",
-    "@types/node": "13.9.1",
-    "@types/react": "16.9.23",
-    "@types/react-dom": "16.9.5",
-    "@typescript-eslint/eslint-plugin": "2.24.0",
-    "@typescript-eslint/parser": "2.24.0",
-    "eslint": "6.8.0",
-    "nodemon": "2.0.2",
-    "ora": "4.0.3",
-    "rimraf": "3.0.2",
-    "typescript": "3.8.3"
+    "vuepress": "1.4.0"
   }
 }

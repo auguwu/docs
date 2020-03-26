@@ -12,6 +12,5 @@ First, you will need to have ESLint and TypeScript installed on your system to c
 - Change the directory to the cloned repo (``cd docs``) and create a seperate branch (``git checkout -b <branch>``)
 - Install any local dependencies from NPM (``npm i``)
 - Update the codebase or documentation
-  - Run ``npm run lint`` to check for any code errors/warnings, this follows the ESLint configuration [here](https://github.com/auguwu/eslint-config).
-  - Run ``npm run build`` to compile TypeScript and check for any compliation errors
+  - Test your changes with ``npm run dev`` or ``yarn dev``!
 - Then, submit your [pull request](https://github.com/auguwu/docs/compare) and wait a few minutes or a few hours for the maintainers to look at your Pull Request and ask for any changes or it'll be merged.
