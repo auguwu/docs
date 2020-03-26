@@ -24,7 +24,7 @@ rpc.on('ready', () => {
 ```
 
 ## Documentation
-- [Ichigo](/ichigo/Ichigo)
-- [DiscordIPC](/ichigo/DiscordIPC)
-- [Constants](/ichigo/Constants)
-- [version](/ichigo/version)
+- [Ichigo](/ichigo/Ichigo.html)
+- [DiscordIPC](/ichigo/DiscordIPC.html)
+- [Constants](/ichigo/Constants.html)
+- [version](/ichigo/version.html)

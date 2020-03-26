@@ -14,8 +14,8 @@ sys.getCPUUsage(); //> 0.36%
 This library is 100% safe, it doesn't execute malicous commands. If you still don't trust it, then don't use it.
 
 ## Functions
-- [sys.Constants](/sysinfo/Constants)
-- [sys.version](/sysinfo/version)
+- [sys.Constants](/sysinfo/Constants.html)
+- [sys.version](/sysinfo/version.html)
 - [sys.getCPUCount](/sysinfo/functions.html#sys-getcpucount-number)
 - [sys.getFreeMemory](/sysinfo/functions.html#sys-getfreememory-number)
 - [sys.getTotalMemory](/sysinfo/functions.html#sys-gettotalmemory-number)

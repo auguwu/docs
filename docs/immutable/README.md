@@ -15,6 +15,6 @@ collection.map(x => x); // ['a', 'b', 'c']
 ```
 
 ## Documentation
-- [Collection](/immutable/Collection)
-- [Pair](/immutable/Pair)
-- [version](/immutable/version)
+- [Collection](/immutable/Collection.html)
+- [Pair](/immutable/Pair.html)
+- [version](/immutable/version.html)

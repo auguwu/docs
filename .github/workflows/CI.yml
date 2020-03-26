@@ -1,0 +1,20 @@
+name: Update website
+on: [push]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update vuepress docs
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: august
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            cd docs
+            git pull
+            rm -fr node_modules && rm yarn.lock
+            yarn
+            sudo vuepress build docs
+            sudo mv docs/.vuepress/dist /var/www/docs.augu.dev
