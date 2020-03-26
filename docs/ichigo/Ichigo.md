@@ -6,10 +6,10 @@
 new Ichigo(clientID: String);
 ```
 
-## Ichigo.expecting: [Collection](/immutable/Collection)&lt;[ExpectingMessage](#struct-expectingmessage)&gt;
+## Ichigo.expecting: [Collection](/immutable/Collection.html)&lt;[ExpectingMessage](#struct-expectingmessage-t-any)&gt;
 > **Returns the expecting messages that were requested**
 
-## Ichigo.ipc: [DiscordIPC](/ichigo/DiscordIPC)
+## Ichigo.ipc: [DiscordIPC](/ichigo/DiscordIPC.html)
 > **Returns the IPC controller**
 
 ## Ichigo.connect(): void
