@@ -2,8 +2,8 @@
   "name": "docs.augu.dev",
   "description": "✏️ Documentation site for my projects using Vuepress",
   "private": true,
-  "version": "1.0.0",
-  "author": "August <root@augu.dev>",
+  "version": "1.0.1",
+  "author": "August <august@augu.dev>",
   "homepage": "https://docs.augu.dev",
   "bugs": "https://github.com/auguwu/docs/issues",
   "scripts": {

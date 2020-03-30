@@ -1,39 +1,39 @@
-# sys.getCPUCount -> [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+# sys.getCPUCount(): [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
 > **Returns the amount of CPU cores you have.**
 
 ```js
 sys.getCPUCount(); // 8
 ```
 
-# sys.getFreeMemory -> [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+# sys.getFreeMemory(): [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
 > **Returns the system's free memory in bytes**
 
 ```js
 sys.getFreeMemory(); // 2750000000000
 ```
 
-# sys.getTotalMemory -> [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+# sys.getTotalMemory(): [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
 > **Returns the total memory of the hard drive in bytes**
 
 ```js
 sys.getTotalMemory(); // 5750000000000
 ```
 
-# sys.getCPUUsage -> [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
+# sys.getCPUUsage(): [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
 > **Returns the current CPU's usage as a percent**
 
 ```js
 sys.getCPUUsage(); // '0.37%'
 ```
 
-# sys.getPlatform -> [Platform](#typedef-platform)
+# sys.getPlatform(): [Platform](#typedef-platform)
 > **Returns the current machine's operating system**
 
 ```js
 sys.getPlatform(); // 'Windows'
 ```
 
-# sys.free -> [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+# sys.free(flag: [FreeFlags](/sysinfo/Constants.html#sys-constants-freeflags)): [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
 > **Returns the free amount from the `free` Unix command**
 
 ::: warning
@@ -46,21 +46,21 @@ It will bring up a warning in the console if not used properly!
 sys.free(sys.Constants.FreeFlags.megabytes); //> 69696969
 ```
 
-# sys.getLoadAvg -> [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
+# sys.getLoadAvg(time?: 1 | 5 | 15): [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)
 > **Returns the load average time**
 
 ```js
 sys.getLoadAvg(15); //> 0.205858
 ```
 
-# sys.getCPUInfo -> [CPUInfo](#struct-cpuinfo)
+# sys.getCPUInfo(): [CPUInfo](#struct-cpuinfo)
 > **Returns an object of the current CPU's information**
 
 ```js
 sys.getCPUInfo(); // { firstModel: '...', lastModel: '...', idle: 488219038, free: 923273827831 }
 ```
 
-# sys.getFilesystemInfo -> [FilesystemInfo](#struct-filesysteminfo)
+# sys.getFilesystemInfo(): [FilesystemInfo](#struct-filesysteminfo)
 > **Gets the file system's statistics from the `df` Unix command.**
 
 ::: warning
@@ -71,7 +71,7 @@ This function is only allowed in Unix subsystems!
 sys.getFilesystemInfo(); // {...}
 ```
 
-# sys.getProcesses -> [Array&lt;Processes&gt;](#struct-processes)
+# sys.getProcesses(amount?: [Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)): [Array&lt;Processes&gt;](#struct-processes)
 > **Returns an Array of processes**
 
 ::: warning
@@ -82,7 +82,7 @@ Windows-equlivent of this function is `sys.getWindowsServices`
 sys.getProcesses(5); // [...]
 ```
 
-# sys.getUnixUptime -> [UnixUptime](#struct-unixuptime)
+# sys.getUnixUptime(): [UnixUptime](#struct-unixuptime)
 > **Returns an Object from the `uptime` Unix command**
 
 ::: warning
@@ -93,7 +93,7 @@ This function only works with Unix systems.
 sys.getUnixUptime(); // { uptime: 5932498302189, users: 2, loads: [0.24, 0.23, 0.45] }
 ```
 
-# sys.getWindowsWorkstation -> [Workstation](#struct-workstation)
+# sys.getWindowsWorkstation(): [Workstation](#struct-workstation)
 > **Returns an object of the current Windows workstation.**
 
 ::: warning
@@ -104,7 +104,7 @@ This function only works with Microsoft Windows
 sys.getWindowsWorkstation(); //> {...}
 ```
 
-# sys.getWindowsServices -> [Array&lt;String&gt;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
+# sys.getWindowsServices(): [Array&lt;String&gt;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)
 > **Returns an Array of services that are running in the background**
 
 ::: warning
@@ -115,7 +115,7 @@ This function only works with Microsoft Windows
 sys.getWindowsServices(); // [...]
 ```
 
-# sys.getMotherboard -> [Motherboard](#struct-motherboard)
+# sys.getMotherboard(): [Motherboard](#struct-motherboard)
 > **Returns an Object of the motherboard information**
 
 ::: warning

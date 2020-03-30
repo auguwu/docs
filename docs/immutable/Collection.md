@@ -64,7 +64,6 @@ collection.reduce<string[]>((curr, prev) => curr.concat(prev), []); // [...]
 
 ## Collection.first(): T | undefined
 ## Collection.first(amount: number): Array&lt;T&gt;
-## Collection.first(amount?: number): T | Array&lt;T&gt; | undefined
 > **Returns the first value from the collection**
 
 ```js
@@ -73,7 +72,6 @@ collection.first(); // 'a'
 
 ## Collection.last(): T | undefined
 ## Collection.last(amount: number): Array&lt;T&gt;
-## Collection.last(amount?: number): T | Array&lt;T&gt; | undefined
 > **Returns the last value from the collection**
 
 ```js

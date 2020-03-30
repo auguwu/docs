@@ -21,7 +21,7 @@ This library is 100% safe, it doesn't execute malicous commands. If you still do
 - [sys.getTotalMemory](/sysinfo/functions.html#sys-gettotalmemory-number)
 - [sys.getCPUUsage](/sysinfo/functions.html#sys-getcpuusage-string)
 - [sys.getPlatform](/sysinfo/functions.html#sys-getcpucount-platform)
-- [sys.free](/sysinfo/functions.html#sys-free-number)
+- [sys.free](/sysinfo/functions.html#sys-free-flag-freeflags-number)
 - [sys.getLoadAvg](/sysinfo/functions.html#sys-getloadavg-number)
 - [sys.getCPUInfo](/sysinfo/functions.html#sys-getcpuinfo-cpuinfo)
 - [sys.getFilesystemInfo](/sysinfo/functions.html#sys-getfilesysteminfo-fsinfo)
