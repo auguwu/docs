@@ -41,8 +41,12 @@ collection.filter(x => x.isValuable()); // [...]
 collection.random(); // SampleClass { 0: 'abcdef' }
 ```
 
-## Collection.merge(collection: [Collection&lt;T&gt;](#collection-t)): [Collection&lt;T&gt;](#collection-t)
-> **Merge a collection into a secondary collection.**
+## Collection.merge(): [Collection&lt;T&gt;](#collection-t)
+> **Make a duplicate collection**
+
+::: warn
+This method might be replaced with `Collection.duplicate()`
+:::
 
 ```js
 collection.merge(otherColl); // Collection [Map] { ... }

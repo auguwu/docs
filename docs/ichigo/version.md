@@ -2,5 +2,5 @@
 > **Returns the version of the library.**
 
 ```js
-Ichigo.version; // '1.2.0'
+Ichigo.version; // '1.2.1'
 ```

@@ -22,6 +22,10 @@ Ichigo.connect();
 ## Ichigo.send&lt;T&gt;(cmd: [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String), args: Array&lt;[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)&gt;): [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;T&gt;
 > **Sends a message to Discord's RPC server and returns a fulfilled or rejected Promise.**
 
+::: danger
+This function cannot be used unless the client has connected. It'll throw an `NotConnectedError` error.
+:::
+
 ```js
 Ichigo.send(Constants.RequestCommand.SetActivity, { ... }); // Promise
 ```
