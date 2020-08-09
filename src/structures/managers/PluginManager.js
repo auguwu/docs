@@ -27,12 +27,12 @@ const { Signale } = require('signale');
 const { join } = require('path');
 
 /**
- * Represents the container for all routes
- * @extends {Collection<import('../Routing').Router>}
+ * Represents the container for all plugins
+ * @extends {Collection<import('../Plugin')>}
  */
-module.exports = class RouterManager extends Collection {
+module.exports = class PluginManager extends Collection {
   /**
-   * Creates a new [RoutingManager] instance
+   * Creates a new [PluginManager] instance
    * @param {import('../Server')} server The server instance
    */
   constructor(server) {
@@ -48,13 +48,13 @@ module.exports = class RouterManager extends Collection {
      * The logger instance
      * @type {import('signale').Signale}
      */
-    this.logger = new Signale({ scope: 'Routing' });
+    this.logger = new Signale({ scope: 'Plugins' });
 
     /**
-     * The path to find all of the routes
+     * The path to find all of the plugins
      * @type {string}
      */
-    this.path = getArbitrayPath('routes');
+    this.path = getArbitrayPath('plugins');
   }
 
   /**
@@ -74,12 +74,12 @@ module.exports = class RouterManager extends Collection {
     }
 
     for (const file of files) {
-      const Router = require(join(this.path, file));
-      /** @type {import('../Routing').Router} */
-      const router = new Router();
+      const Plugin = require(join(this.path, file));
+      /** @type {import('../Plugin')} */
+      const plugin = new Plugin();
 
-      router.init(this.server);
-      this.set(router.prefix, router);
+      this.set(plugin.name, plugin);
+      this.server.app.register(plugin.fastifyPlugin);
     }
   }
 };

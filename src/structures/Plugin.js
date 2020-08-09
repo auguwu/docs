@@ -20,29 +20,41 @@
  * SOFTWARE.
  */
 
-/**
- * Seperator for paths for the correspandent Operating System
- * @type {string}
- */
-const sep = process.platform === 'win32' ? '\\' : '/';
+const plugin = require('fastify-plugin');
 
 /**
- * The version of this documentation site
- * @type {string}
+ * Represents a [Plugin] class, which represents a class-based version for fastify-plugin
  */
-const version = require('../../package.json').version;
+module.exports = class Plugin {
+  /**
+   * Creates a new [Plugin] instance
+   * @param {string} name The plugin's name
+   */
+  constructor(name) {
+    /**
+     * The plugin's name
+     * @type {string}
+     */
+    this.name = name;
+  }
 
-/**
- * The GitHub repository
- * @type {string}
- */
-const repository = 'https://github.com/auguwu/docs';
+  /**
+   * Abstract function to run the plugin
+   * @param {import('fastify').FastifyInstance} server The server
+   * @param {any} opts Any options to use
+   * @param {(error?: import('fastify').FastifyError) => void} done Function to call when the plugin is done initialising
+   */
+  async run(server, opts, done) {
+    throw new SyntaxError(`Plugin "${this.name}" requires the following function: "Plugin.run(server, opts, done)"`);
+  }
 
-/**
- * All constant variables belong here
- */
-module.exports = {
-  repository,
-  version,
-  sep
+  /**
+   * Gets the fastify-plugin instance
+   */
+  get fastifyPlugin() {
+    return plugin(this.run.bind(this), {
+      fastify: '>=3.x',
+      name: this.name
+    });
+  }
 };
