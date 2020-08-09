@@ -2,15 +2,23 @@
   "name": "docs.augu.dev",
   "description": "✏️ Documentation site for my projects using Vuepress",
   "private": true,
-  "version": "1.0.1",
+  "version": "2.0.0",
   "author": "August <august@augu.dev>",
   "homepage": "https://docs.augu.dev",
   "bugs": "https://github.com/auguwu/docs/issues",
   "scripts": {
-    "build": "npx vuepress build docs",
-    "dev": "npx vuepress dev docs"
+    "lint": "eslint src --ext .js --fix"
+  },
+  "dependencies": {
+    "@augu/immutable": "0.3.2",
+    "@augu/dotenv": "1.1.0",
+    "@augu/orchid": "1.4.0",
+    "fastify": "3.1.1",
+    "signale": "1.4.0"
   },
   "devDependencies": {
-    "vuepress": "1.4.0"
+    "@augu/eslint-config": "1.6.1",
+    "eslint": "7.6.0",
+    "typescript": "3.9.7"
   }
 }
