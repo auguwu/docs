@@ -118,8 +118,8 @@ module.exports = class TypeScriptUtil {
    */
   static isNodePublic(node) {
     return (
-      node.kind === ts.SyntaxKind.PublicKeyword &&
-      (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Public) !== 0
+      (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Public) !== 0 &&
+      (!!node.parent && node.parent.kind === ts.SyntaxKind.PublicKeyword)
     );
   }
 
@@ -129,8 +129,8 @@ module.exports = class TypeScriptUtil {
    */
   static isNodePrivate(node) {
     return (
-      node.kind === ts.SyntaxKind.PrivateKeyword &&
-      (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Private) !== 0
+      (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Private) !== 0 &&
+      (!!node.parent && node.parent.kind === ts.SyntaxKind.PrivateKeyword)
     );
   }
 
@@ -140,9 +140,38 @@ module.exports = class TypeScriptUtil {
    */
   static isNodeProtected(node) {
     return (
-      node.kind === ts.SyntaxKind.ProtectedKeyword &&
-      (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Protected) !== 0
+      (ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Protected) !== 0 &&
+      (!!node.parent && node.parent.kind === ts.SyntaxKind.ProtectedKeyword)
     );
+  }
+
+  /**
+   * Get the module's name
+   * @param {ts.ModuleBlock} parent The parent node 
+   */
+  static getModuleName(parent) {
+    if (parent.kind !== ts.SyntaxKind.ModuleBlock) return 'unknown';
+
+    const text = parent.parent.getText();
+    const name = text.split('\r\n')[0];
+
+    const ModuleRegex = /declare module /i;
+    const NamespaceRegex = /declare namespace /i;
+    const CombinedRegex = /declare module |declare namespace /i;
+
+    return {
+      type: ModuleRegex.test(name) 
+        ? 'module' 
+        : NamespaceRegex.test(name) 
+          ? 'namespace' 
+          : 'none',
+      name: name
+        .replace(CombinedRegex, '')
+        .replace(/'/g, '')
+        .replace(/"/g, '')
+        .replace(/{/g, '')
+        .trim()
+    };
   }
 
   /**
@@ -151,7 +180,7 @@ module.exports = class TypeScriptUtil {
    * @param {ts.CompilerOptions} opts The options to use when compiling
    */
   static getBlockComments(filenames, opts = {}) {
-    const result = { success: true, reports: [], comments: [] };
+    const result = { success: true, reports: [], comments: [], module: 'unknown' };
 
     /**
      * Inline function to report a message
@@ -181,77 +210,107 @@ module.exports = class TypeScriptUtil {
      */
     const visit = (node) => {
       const children = node.getChildCount();
-      
       if (children > 0) ts.forEachChild(node, visit);
+
+      // Checks with the compiler if `node` has the `export` keyword
       if (this.isNodeExported(node)) {
-        if (!node.name) {
-          report(node, `Node ${ts.SyntaxKind[node.kind]} doesn't have a name appended`);
-          return;
-        }
+        if (ts.isClassDeclaration(node)) {
+          if (!node.name) {
+            report(node, `Node @ "${ts.SyntaxKind[node.kind]}" doesn't include a name`);
+            return;
+          }
 
-        const symbol = checker.getSymbolAtLocation(node.name);
-        if (symbol) {
-          result.comments.push({
-            returnValue: null,
-            description: ts.displayPartsToString(symbol.getDocumentationComment(checker)),
-            constructor: true,
-            accessor: false,
-            parent: null,
-            params: [],
-            method: false,
+          let accessor = 'public';
+          if (this.isNodeProtected(node)) accessor = 'protected';
+          else if (this.isNodePrivate(node)) accessor = 'private';
+          else if (this.isNodePublic(node)) accessor = 'public';
+
+          const symbol = checker.getSymbolAtLocation(node.name);
+          if (!symbol) return report(node, `"${accessor} ${node.name.escapedText}@${ts.SyntaxKind[node.kind]}" didn't provide any type-checking, skipping`);          
+        
+          const comment = {
+            accessor,
             type: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration)),
-            name: symbol.getName()
-          });
-        } else {
-          report(node, `Unable to get symbol for exported node "${node.name}"`);
-          return;
-        }
-      }
+            docs: {},
+            kind: ts.SyntaxKind[node.kind],
+            name: node.name.escapedText,
+            mod: this.getModuleName(node.parent)
+          };
 
-      if (ts.isMethodDeclaration(node)) {
-        if (!node.name) {
-          report(node, 'Method doesn\'t have a name attached');
-          return;
+          const constructorType = checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
+          const constructors = constructorType
+            .getConstructSignatures()
+            .map(signature => ({
+              documentation: ts.displayPartsToString(signature.getDocumentationComment(checker)),
+              returnType: checker.typeToString(signature.getReturnType()),
+              params: signature.parameters.map(symbol => ({
+                documentation: ts.displayPartsToString(symbol.getDocumentationComment(checker)),
+                name: symbol.getEscapedName(),
+                type: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration))
+              }))
+            }));
+
+          comment.docs.constructors = constructors;
+          result.comments.push(comment);
         }
 
-        if (!node.parent) {
-          report(node, 'Method doesn\'t have a parent component attached');
-          return;
-        }
+        if (ts.isFunctionDeclaration(node)) {
+          if (!node.name) {
+            report(node, `Node @ ${ts.SyntaxKind[node.kind]} doesn't have a name attached`);
+            return;
+          }
 
-        const symbol = checker.getSymbolAtLocation(node.name);
-        const parent = checker.getSymbolAtLocation(node.parent.name);
-        if (symbol) {
+          const symbol = checker.getSymbolAtLocation(node.name);
+          if (!symbol) {
+            report(node, `Unable to fetch symbolic link with node "${node.name.escapedText}@${ts.SyntaxKind[node.kind]}"`);
+            return;
+          }
+
+          const comment = {
+            // It's gonna be public since it's exported
+            accessor: 'public',
+            type: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration)),
+            docs: {},
+            kind: ts.SyntaxKind[node.kind],
+            name: node.name.escapedText,
+            mod: this.getModuleName(node.parent)
+          };
+
           const type = checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
-          const params = type.getConstructSignatures();
-          console.log(params);
+          const signatures = type.getCallSignatures()
+            .map(signature => ({
+              documentation: ts.displayPartsToString(signature.getDocumentationComment(checker)),
+              returnType: checker.typeToString(signature.getReturnType()),
+              params: signature.parameters.map(symbol => ({
+                documentation: ts.displayPartsToString(symbol.getDocumentationComment(checker)),
+                name: symbol.getEscapedName(),
+                type: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration))
+              }))
+            }));
 
-          const accessType = this.isNodePublic(node) 
-            ? 'public' 
-            : this.isNodePrivate(node) 
-              ? 'private'
-              : this.isNodeProtected(node)
-                ? 'protected'
-                : 'unknown';
-                
-          result.comments.push({
-            returnValue: null,
-            description: ts.displayPartsToString(symbol.getDocumentationComment(checker)),
-            constructor: false,
-            accessType,
-            accessor: false,
-            parent: result.comments.find(comment => comment.name === parent.getName()),
-            params: [],
-            method: true,
+          comment.docs.signatures = signatures;
+          result.comments.push(comment);
+        }
+
+        if (ts.isVariableDeclaration(node)) {
+          if (!node.name) return report(node, `Missing \`name\` property in node @ ${ts.SyntaxKind[node.kind]}`);
+
+          const symbol = checker.getSymbolAtLocation(node.name);
+          if (!symbol) return report(node, `Unable to fetch symbolic reference for node "${node.name.escapedText}@${ts.SyntaxKind[node.kind]}"`);
+
+          const comment = {
+            accessor: 'public', // it's exported so what did u expect
             type: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration)),
-            name: symbol.getName()
-          });
-        } else {
-          report(node, 'Method doesn\'t have a parent componet attached');
-          return;
+            docs: {},
+            kind: ts.SyntaxKind[node.kind],
+            name: node.name.escapedText,
+            mod: this.getModuleName(node.parent.parent.parent) // funky town
+          };
+
+          result.comments.push(comment);
         }
       }
-    };
+    }; // reminder that dani is a homosexual
 
     for (let i = 0; i < sourceFiles.length; i++) {
       const sourceFile = sourceFiles[i];
@@ -270,16 +329,3 @@ module.exports = class TypeScriptUtil {
     return result;
   }
 };
-
-/*
-      if (ts.isPropertyAssignment(node) && node.name) {
-        const symbol = checker.getSymbolAtLocation(node.name);
-        if (symbol) result.comments.push({
-          comment: ts.displayPartsToString(symbol.getDocumentationComment(checker)),
-          type: checker.typeToString(checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration)),
-          name: symbol.getName()
-        });
-      } else {
-        report(node, `Node ${ts.SyntaxKind[node.kind]} was not a property assignment or it didn't have a name`);
-      }
-*/

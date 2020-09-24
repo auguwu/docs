@@ -6,7 +6,7 @@ const ts = require('typescript');
 console.log(`== TypeScript v${TSUtil.version} | Friendly?: ${TSUtil.isFriendly(require('../package.json')) ? 'yes' : 'no'} ==`);
 
 const filenames = [join(__dirname, 'test', 'file.d.ts')];
-const { success, reports, comments } = TSUtil.getBlockComments(filenames, {
+const result = TSUtil.getBlockComments(filenames, {
   target: ts.ScriptTarget.ESNext,
   module: ts.ModuleKind.CommonJS,
   lib: [
@@ -28,13 +28,13 @@ const { success, reports, comments } = TSUtil.getBlockComments(filenames, {
   emitDeclarationMetadata: true,
 });
 
-console.log(`Success: ${success ? 'Yes' : 'No'}`);
-console.log(`Received ${comments.length} comments`);
+console.log(`Success: ${result.success ? 'Yes' : 'No'}`);
+console.log(`Received ${result.comments.length} comments`);
 
-if (reports.length) {
-  for (let i = 0; i < reports.length; i++) console.error(`[${i + 1}/${reports.length} | ${reports[i].file || 'global'}] ${reports[i].message}`);
+if (result.reports.length) {
+  for (let i = 0; i < result.reports.length; i++) console.error(`[${i + 1}/${result.reports.length} | ${result.reports[i].file || 'global'}] ${result.reports[i].message}`);
 }
 
-if (comments.length) {
-  for (let i = 0; i < comments.length; i++) console.log(`[${i + 1}/${comments.length}]\n${JSON.stringify(comments[i])}`);
+if (result.comments.length) {
+  for (let i = 0; i < result.comments.length; i++) console.log(`[${i + 1}/${result.comments.length}] View below\n`, result.comments[i]);
 }
