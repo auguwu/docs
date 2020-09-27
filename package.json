@@ -11,16 +11,18 @@
   },
   "dependencies": {
     "@augu/dotenv": "1.2.0",
-    "@augu/immutable": "0.4.3",
-    "@augu/orchid": "1.6.1",
+    "@augu/immutable": "0.5.0",
+    "@augu/orchid": "1.6.5",
     "express": "4.17.1",
-    "signale": "1.4.0",
-    "tar": "6.0.2"
+    "leeks.js": "0.0.9",
+    "simple-git": "2.20.1",
+    "tar": "6.0.5",
+    "typedoc": "0.19.2"
   },
   "devDependencies": {
     "@augu/eslint-config": "1.8.2",
-    "eslint": "7.8.1",
-    "sass": "1.26.10",
-    "typescript": "4.0.2"
+    "eslint": "7.10.0",
+    "sass": "1.26.11",
+    "typescript": "4.0.3"
   }
 }
