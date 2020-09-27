@@ -1,6 +1,7 @@
 node_modules/
+.cache/
 build/
-old/
+logs/
 .env
 
 package-lock.json

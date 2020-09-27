@@ -35,7 +35,13 @@ const { sep } = require('./Constants');
 const recursiveDir = async(root, path = '.') => {
   let files = [];
   const fullPath = join(root, path);
-  const filenames = await fs.readdir(fullPath);
+  let filenames;
+
+  try {
+    filenames = await fs.readdir(fullPath);
+  } catch(ex) {
+    return files;
+  }
 
   for (let i = 0; i < filenames.length; i++) {
     const file = filenames[i];

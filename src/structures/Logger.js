@@ -93,14 +93,17 @@ class Logger {
     if (existsSync(join(this.logPath, escapedName))) {
       unlinkSync(join(this.logPath, escapedName));
       writeFileSync(join(this.logPath, escapedName), '');
+    } else {
+      writeFileSync(join(this.logPath, escapedName), '');
     }
   }
 
   /**
    * Returns the date as a string
    * @private
+   * @param {Date} [c]
    */
-  getDate() {
+  getDate(c = new Date()) {
     const now = new Date();
     const esc = (type) => `0${type}`.slice(-2);
 
@@ -122,45 +125,81 @@ class Logger {
    * @param {...unknown} messages The messages to log
    */
   write(level, severity, ...messages) {
-    let lvlText, padding;
+    let lvlText;
     const processor = severity === 'none' ? process.stdout : process.stderr;
 
     switch (level) {
       case 'info':
-        lvlText = leeks.hex('#81D8D0', `[Info / ${process.pid}]`);
-        padding = '    ';
+        lvlText = leeks.hex('#81D8D0', `[Info    | ${process.pid}]`);
         break;
 
       case 'warn':
-        lvlText = leeks.hex('#FFFF8B', `[Warn / ${process.pid}]`);
-        padding = '    ';
+        lvlText = leeks.hex('#FFFF8B', `[Warn    | ${process.pid}]`);
         break;
 
       case 'error':
-        lvlText = leeks.hex('#B2555F', `[Error / ${process.pid}]`);
-        padding = '   ';
+        lvlText = leeks.hex('#F77687', `[Error   | ${process.pid}]`);
         break;
 
       case 'debug':
-        lvlText = leeks.hex('#987DC5', `[Debug / ${process.pid}]`);
-        padding = '   ';
+        lvlText = leeks.hex('#987DC5', `[Debug   | ${process.pid}]`);
         break;
 
       case 'request':
-        lvlText = leeks.hex('#A96E71', `[Request / ${process.pid}]`);
-        padding = ' ';
+        lvlText = leeks.hex('#42A7A4', `[Request | ${process.pid}]`);
         break;
 
       default:
-        lvlText = leeks.hex('#454545', `[Unknown / ${process.pid}]`);
-        padding = ' ';
+        lvlText = leeks.hex('#454545', `[Unknown | ${process.pid}]`);
         break;
     }
 
     const name = this.name.toLowerCase().replace(/_| /g, '-');
     const message = formatMessages(this.depth, ...messages);
-    processor.write(`${leeks.colors.gray(this.getDate())} ${leeks.hex('#FFB9BE', `[${this.name}]`)} ${lvlText}${padding}   ~> ${message}\n`);
-    appendFileSync(join(__dirname, 'logs', `${name}.log`), `${this.getDate()} [${this.name}] ${lvlText.replace(/\u001b\[.*?m/g, '')}${padding}   ~> ${message.replace(/\u001b\[.*?m/g, '')}\n`);
+    processor.write(`${leeks.colors.gray(this.getDate())} ${leeks.hex('#FFB9BE', `[${this.name}]`)} ${lvlText} ~> ${message}\n`);
+    appendFileSync(join(process.cwd(), 'logs', `${name}.log`), `${this.getDate()} [${this.name}] ${lvlText.replace(/\u001b\[.*?m/g, '')} ~> ${message.replace(/\u001b\[.*?m/g, '')}\n`);
+  }
+
+  /**
+   * Writes to the console as `INFO`
+   * @param {...unknown} messages The messages
+   */
+  info(...messages) {
+    return this.write('info', 'none', ...messages);
+  }
+
+  /**
+   * Writes to the console as `WARN`
+   * @param {...unknown} messages The messages
+   */
+  warn(...messages) {
+    return this.write('warn', 'none', ...messages);
+  }
+
+  /**
+   * Writes to the console as `ERROR`
+   * @param {...unknown} messages The messages
+   */
+  error(...messages) {
+    return this.write('error', 'error', ...messages);
+  }
+
+  /**
+   * Writes to the console as `INFO`
+   * @param {...unknown} messages The messages
+   */
+  debug(...messages) {
+    if (process.env.NODE_ENV !== 'development') return;
+    
+    return this.write('debug', 'none', ...messages);
+  }
+
+  /**
+   * Writes to the console as `INFO`
+   * @param {...unknown} messages The messages
+   */
+  request(...messages) {
+    return this.write('request', 'none', ...messages);
   }
 }
 

@@ -1,38 +1,9 @@
-const { createLogger } = require('./structures/Logger');
-const log = createLogger('Master', { depth: 2 });
+process.env.NODE_ENV = 'development';
 
-log.write(
-  'info', 
-  'none', 
-  'Hello, world!'
-);
+const ProjectsManager = require('./structures/managers/ProjectManager');
+const manager = new ProjectsManager();
 
-log.write(
-  'warn', 
-  'none', 
-  'Oops!'
-);
-
-log.write(
-  'error',
-  'error',
-  'Uh oh, an exception occured!'
-);
-
-log.write(
-  'debug',
-  'none',
-  'UwU\'d at 00:00:00'
-);
-
-log.write(
-  'request',
-  'none',
-  'Made a request to GET /'
-);
-
-log.write(
-  'unknown',
-  'error',
-  'Unknown level!'
-);
+manager
+  .load()
+  .then(() => process.exit(0))
+  .catch(console.error);
