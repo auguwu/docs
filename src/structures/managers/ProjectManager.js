@@ -20,14 +20,9 @@
  * SOFTWARE.
  */
 
-const { existsSync, createWriteStream, createReadStream, promises: fs } = require('fs');
 const { createLogger } = require('../Logger');
 const { Collection } = require('@augu/immutable');
-const { join } = require('path');
 const orchid = require('@augu/orchid');
-const util = require('../../util');
-const tar = require('tar');
-const { createGunzip } = require('zlib');
 
 /**
  * List of projects to withold documentation
@@ -35,7 +30,7 @@ const { createGunzip } = require('zlib');
  */
 const Projects = {
   '@augu/immutable': {
-    downloadUrl: 'https://registry.npmjs.org/@augu/immutable/-/immutable-$VERSION$.tgz',
+    downloadUrl: (version) => `https://registry.npmjs.org/@augu/immutable/-/immutable-${version}.tgz`,
     stargazers: 0,
     downloads: 0,
     githubUrl: 'auguwu/immutable',
@@ -45,7 +40,7 @@ const Projects = {
     name: 'Immutable'
   },
   '@augu/orchid': {
-    downloadUrl: 'https://registry.npmjs.org/@augu/orchid/-/orchid-$VERSION$.tgz',
+    downloadUrl: (version) => `https://registry.npmjs.org/@augu/orchid/-/orchid-${version}.tgz`,
     stargazers: 0,
     downloads: 0,
     githubUrl: 'auguwu/orchid',
@@ -55,7 +50,7 @@ const Projects = {
     name: 'Orchid'
   },
   '@augu/ichigo': {
-    downloadUrl: 'https://registry.npmjs.org/@augu/ichigo/-/ichigo-$VERSION$.tgz',
+    downloadUrl: (version) => `https://registry.npmjs.org/@augu/ichigo/-/ichigo-${version}.tgz`,
     stargazers: 0,
     downloads: 0,
     githubUrl: 'auguwu/ichigo',
@@ -65,7 +60,7 @@ const Projects = {
     name: 'Ichigo'
   },
   '@augu/dotenv': {
-    downloadUrl: 'https://registry.npmjs.org/@augu/dotenv/-/dotenv-$VERSION$.tgz',
+    downloadUrl: (version) => `https://registry.npmjs.org/@augu/dotenv/-/dotenv-${version}.tgz`,
     stargazers: 0,
     downloads: 0,
     githubUrl: 'auguwu/dotenv',
@@ -75,7 +70,7 @@ const Projects = {
     name: 'dotenv'
   },
   '@augu/maru': {
-    downloadUrl: 'https://registry.npmjs.org/@augu/maru/-/maru-$VERSION$.tgz',
+    downloadUrl: (version) => `https://registry.npmjs.org/@augu/maru/-/maru-${version}.tgz`,
     stargazers: 0,
     downloads: 0,
     githubUrl: 'auguwu/maru',
@@ -85,7 +80,7 @@ const Projects = {
     name: 'Maru'
   },
   'laffey': {
-    downloadUrl: 'https://registry.npmjs.org/laffey/-/laffey-$VERSION$.tgz',
+    downloadUrl: (version) => `https://registry.npmjs.org/laffey/-/laffey-${version}.tgz`,
     stargazers: 0,
     downloads: 0,
     githubUrl: 'auguwu/laffey',
@@ -119,8 +114,6 @@ module.exports = class ProjectsManager extends Collection {
     this.http = new orchid.HttpClient({
       agent: `docs.augu.dev (v${require('../../../package.json').version}, https://github.com/auguwu/docs)`
     });
-
-    this.http.use(orchid.middleware.streams());
   }
 
   /**
@@ -136,22 +129,15 @@ module.exports = class ProjectsManager extends Collection {
       const res1 = await this.http.get(`https://api.github.com/repos/${project.githubUrl}`);
       const gh = res1.json();
 
+      this.logger.debug('', '-=- Ratelimit Debug Info -=-', {
+        remaining: Number(res1.headers['x-ratelimit-remaining']),
+        reset: Number(res1.headers['x-ratelimit-reset'] * 1000),
+        limit: Number(res1.headers['x-ratelimit-limit'])
+      });
+
       if (res1.statusCode === 403) {
-        if (this.ratelimitReset) clearTimeout(this.ratelimitReset);
-
         this.logger.warn('Reached a ratelimited state, retrying later...');
-        this.logger.debug('', '-=- Ratelimit Debug Info -=-', {
-          remaining: Number(res1.headers['x-ratelimit-remaining']),
-          reset: Number(res1.headers['x-ratelimit-reset'] * 1000),
-          limit: Number(res1.headers['x-ratelimit-limit'])
-        });
-
-        this.ratelimitReset = setTimeout(async () => {
-          this.logger.info('Retrying to build projects manager...');
-          await this.load();
-        }, Date.now() - Number(res1.headers['x-ratelimit-reset'] * 1000));
-
-        break;
+        continue;
       }
 
       if (gh.private) {
@@ -185,55 +171,8 @@ module.exports = class ProjectsManager extends Collection {
       this.logger.debug(`Received version "${pkg.version}" for project "${project.githubUrl}" (branch: ${gh.default_branch})`);
       project.version = pkg.version;
 
-      // Now we clone it in a ".cache" folder for typedoc
-      const destination = join(process.cwd(), '..', '.cache');
-      const directory = join(destination, `${project.name.toLowerCase()}.tar.gz`);
-
-      const files = await util.recursiveDir(destination, destination);
-      for (let i = 0; i < files.length; i++) await fs.unlink(files[i]);
-
-      if (!existsSync(destination)) await fs.mkdir(destination);
-
-      this.logger.info(`Extracting local cache to "${destination}"...`);
-      const res3 = await this
-        .http
-        .get(project.downloadUrl.replace('$VERSION$', project.version))
-        .stream();
-      
-      const stream = res3.stream();
-
-      try {
-        await this.extract(directory, destination, stream);
-      } catch(ex) {
-        this.logger.error('Unable to extract tarball', ex);
-      }
+      this.set(key, project);
     }
-  }
-
-  /**
-   * Private function to extract a .tar.gz file
-   * @param {string} path The path to extract from
-   * @param {string} dest The destination
-   * @param {import('http').IncomingMessage} stream The incoming stream
-   * @returns {Promise<void>} Empty promise
-   */
-  extract(path, dest, stream) {
-    return new Promise((resolve, reject) => {
-      const gunzip = createGunzip();
-      gunzip.on('error', reject);
-
-      stream.pipe(gunzip);
-
-      const writer = createWriteStream(path);
-      stream.pipe(writer);
-
-      const tarStream = createReadStream(path).pipe(tar.x({
-        cwd: dest
-      }));
-
-      tarStream.once('finish', resolve);
-      tarStream.on('error', reject);
-    });
   }
 };
 

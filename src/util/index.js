@@ -32,7 +32,7 @@ const { sep } = require('./Constants');
  * @returns {Promise<string[]>} An array of all the files that was found 
  * @credit https://github.com/profile-place/api/blob/master/lib/util.js#L6-L25
  */
-const recursiveDir = async(root, path = '.') => {
+const recursiveDir = async(root, path = '') => {
   let files = [];
   const fullPath = join(root, path);
   let filenames;
@@ -40,6 +40,8 @@ const recursiveDir = async(root, path = '.') => {
   try {
     filenames = await fs.readdir(fullPath);
   } catch(ex) {
+    console.log(fullPath);
+    console.log(ex);
     return files;
   }
 

@@ -1,9 +1,11 @@
 process.env.NODE_ENV = 'development';
 
-const ProjectsManager = require('./structures/managers/ProjectManager');
-const manager = new ProjectsManager();
+const SassManager = require('./structures/managers/SassManager');
+const manager = new SassManager();
 
-manager
-  .load()
-  .then(() => process.exit(0))
-  .catch(console.error);
+manager.load();
+
+process.on('SIGINT', () => {
+  manager.dispose();
+  process.exit(0);
+});
