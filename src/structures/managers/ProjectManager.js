@@ -101,6 +101,12 @@ module.exports = class ProjectsManager extends Collection {
    */
   constructor() {
     super(Projects);
+
+    /**
+     * If this [ProjectsManager] is loaded or not
+     * @type {boolean}
+     */
+    this.initialised = false;
     
     /**
      * The logger for this [ProjectsManager]
@@ -173,6 +179,8 @@ module.exports = class ProjectsManager extends Collection {
 
       this.set(key, project);
     }
+
+    this.initialised = true;
   }
 };
 

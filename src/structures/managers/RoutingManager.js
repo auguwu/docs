@@ -21,11 +21,71 @@
  */
 
 const { createLogger } = require('../Logger');
-const { Collection } = require('@augu/immutable');
+const { existsSync } = require('fs');
 const { join } = require('path');
 const util = require('../../util');
 
 /**
  * Routing manager to handle routing for this application
  */
-module.exports = class RoutingManager {};
+module.exports = class RoutingManager {
+  /**
+   * Creates a new [RoutingManager] instance
+   * @param {import('../Application')} app The application itself 
+   */
+  constructor(app) {
+    /**
+     * If this [RoutingManager] is initialised or not
+     * @type {boolean}
+     */
+    this.initialised = false;
+
+    /**
+     * The logger instance
+     * @private
+     */
+    this.logger = createLogger('Routing', { depth: 2 });
+
+    /**
+     * The path to load routers
+     * @type {string}
+     */
+    this.path = util.getArbitrayPath('routes');
+
+    /**
+     * The application
+     * @type {import('../Application')}
+     * @private
+     */
+    this.app = app;
+  }
+
+  /**
+   * Loads this [RoutingManager] instance
+   */
+  async load() {
+    if (!existsSync(this.path)) {
+      this.logger.error(new Error(`Path "${this.path}" doesn't exist, did you install a broken commit?`));
+      return;
+    }
+
+    const files = await util.recursiveDir(this.path);
+    if (!files.length) {
+      this.logger.error(new Error('No routes were found'));
+      return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+      const file = require(join(this.path, files[i]));
+      if (!file.hasOwnProperty('path') || !file.hasOwnProperty('router')) {
+        this.logger.error(new Error(`File "${files[i]}" doesn't include exported values: "path" or "router"`));
+        continue;
+      }
+
+      this.app.service.use(file.path === '' ? '/' : `/${file.path}`, file.router);
+      this.logger.info(`Initialised router for path "${file.path === '' ? '/' : `/${file.path}`}"`);
+    }
+
+    this.initialised = true;
+  }
+};

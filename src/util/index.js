@@ -40,8 +40,6 @@ const recursiveDir = async(root, path = '') => {
   try {
     filenames = await fs.readdir(fullPath);
   } catch(ex) {
-    console.log(fullPath);
-    console.log(ex);
     return files;
   }
 

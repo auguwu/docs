@@ -101,9 +101,8 @@ class Logger {
   /**
    * Returns the date as a string
    * @private
-   * @param {Date} [c]
    */
-  getDate(c = new Date()) {
+  getDate() {
     const now = new Date();
     const esc = (type) => `0${type}`.slice(-2);
 
