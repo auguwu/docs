@@ -15,7 +15,7 @@
     "@augu/orchid": "1.6.5",
     "express": "4.17.1",
     "leeks.js": "0.0.9",
-    "simple-git": "2.20.1",
+    "simple-git": "2.23.0",
     "tar": "6.0.5",
     "typedoc": "0.19.2"
   },
