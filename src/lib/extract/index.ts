@@ -20,28 +20,9 @@
  * SOFTWARE.
  */
 
-import { promises as fs } from 'fs';
-import { join } from 'path';
+import { HttpClient } from '@augu/orchid';
+import tar from 'tar';
 
-/**
- * Re-cursively read a directory and return the contents
- * @param dir The directory
- * @returns The results as an Array
- */
-export async function readdir(dir: string) {
-  let results: string[] = [];
-  const files = await fs.readdir(dir);
-
-  for (let i = 0; i < files.length; i++) {
-    const stats = await fs.lstat(join(dir, files[i]));
-
-    if (stats.isDirectory() && !stats.isSymbolicLink()) {
-      const other = await readdir(join(dir, files[i]));
-      results = results.concat(other);
-    } else {
-      results.push(join(dir, files[i]));
-    }
-  }
-
-  return results;
+export class TarExtractor {
+  
 }

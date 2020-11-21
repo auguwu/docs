@@ -20,28 +20,27 @@
  * SOFTWARE.
  */
 
-import { promises as fs } from 'fs';
-import { join } from 'path';
+import { exec } from 'child_process';
+
+interface GitResult {
+  success: boolean;
+  result: any;
+  code: number;
+}
 
 /**
- * Re-cursively read a directory and return the contents
- * @param dir The directory
- * @returns The results as an Array
+ * Asynchronouslly get results of a return value of `git`
+ * @param args Any additional arguments to use
+ * @param cwd The directory to execute the command
  */
-export async function readdir(dir: string) {
-  let results: string[] = [];
-  const files = await fs.readdir(dir);
-
-  for (let i = 0; i < files.length; i++) {
-    const stats = await fs.lstat(join(dir, files[i]));
-
-    if (stats.isDirectory() && !stats.isSymbolicLink()) {
-      const other = await readdir(join(dir, files[i]));
-      results = results.concat(other);
-    } else {
-      results.push(join(dir, files[i]));
+export function git(args: string[], cwd?: string) {
+  return new Promise<GitResult>((resolve) => exec(`git ${args.join(' ')}`, cwd ? { cwd } : undefined, (error, stdout, stderr) => {
+    if (error || stderr) {
+      const std = Buffer.isBuffer(stderr) ? stderr.toString('utf8') || null : stderr;
+      return resolve({ success: false, result: std, code: 1 });
     }
-  }
 
-  return results;
+    const std = Buffer.isBuffer(stdout) ? stdout.toString('utf8') || null : stdout;
+    return resolve({ success: true, result: std?.trim() || '', code: 0 });
+  }));
 }

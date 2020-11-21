@@ -20,28 +20,16 @@
  * SOFTWARE.
  */
 
-import { promises as fs } from 'fs';
-import { join } from 'path';
+type Listener = (...args: any[]) => void;
 
-/**
- * Re-cursively read a directory and return the contents
- * @param dir The directory
- * @returns The results as an Array
- */
-export async function readdir(dir: string) {
-  let results: string[] = [];
-  const files = await fs.readdir(dir);
+export class EventEmitter<M extends object> {
+  private listeners: M;
 
-  for (let i = 0; i < files.length; i++) {
-    const stats = await fs.lstat(join(dir, files[i]));
-
-    if (stats.isDirectory() && !stats.isSymbolicLink()) {
-      const other = await readdir(join(dir, files[i]));
-      results = results.concat(other);
-    } else {
-      results.push(join(dir, files[i]));
-    }
+  constructor() {
+    this.listeners = {} as any; // create a object with no prototype
   }
 
-  return results;
+  on<K extends keyof M>(event: K, listener: M[K]) {
+    if (!this.listeners.hasOwnProperty(event)) this.listeners[event] = 'E';
+  }
 }
