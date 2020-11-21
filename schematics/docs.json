@@ -1,3 +1,32 @@
 {
-
+  "$schema": "http://json-schema.org/schema",
+  "description": "Schema for docs.json for the documentation generator",
+  "required": ["name", "pages"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the project"
+    },
+    "pages": {
+      "type": "array",
+      "description": "The pages to index from to render out Markdown"
+    },
+    "includes": {
+      "type": "array",
+      "description": "Any markdown inclusions to render out using the `include` function"
+    },
+    "sidebar": {
+      "type": "object",
+      "description": "Sidebar configuration",
+      "default": null,
+      "items": {
+        "properties": {
+          "short_name": {
+            "type": "string",
+            "description": "Shorten name when displaying in the sidebar, this will default to the name in this schema"
+          }
+        }
+      }
+    }
+  }
 }
