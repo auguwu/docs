@@ -20,16 +20,23 @@
  * SOFTWARE.
  */
 
-type Listener = (...args: any[]) => void;
+/** */
+export class InvalidProjectStructureException extends Error {
+  constructor(key: string, message: string) {
+    super(message);
 
-export class EventEmitter<M extends object> {
-  private listeners: M;
-
-  constructor() {
-    this.listeners = {} as any; // create a object with no prototype
+    this.name = `InvalidProjectStructureException [${key}]`;
   }
+}
 
-  on<K extends keyof M>(event: K, listener: M[K]) {
-    if (!this.listeners.hasOwnProperty(event)) this.listeners[event] = 'E';
+/* */
+export class MissingRequiredKeyException extends Error {
+  public key: string;
+
+  constructor(key: string) {
+    super(`Missing required key: "${key}"`);
+
+    this.name = 'MissingRequiredKeyException';
+    this.key = key;
   }
 }

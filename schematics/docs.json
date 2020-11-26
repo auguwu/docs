@@ -14,19 +14,6 @@
     "includes": {
       "type": "array",
       "description": "Any markdown inclusions to render out using the `include` function"
-    },
-    "sidebar": {
-      "type": "object",
-      "description": "Sidebar configuration",
-      "default": null,
-      "items": {
-        "properties": {
-          "short_name": {
-            "type": "string",
-            "description": "Shorten name when displaying in the sidebar, this will default to the name in this schema"
-          }
-        }
-      }
     }
   }
 }
