@@ -21,7 +21,7 @@
  */
 
 import { InvalidProjectStructureException, MissingRequiredKeyException } from './errors';
-import { ParsedAST, ASTGenerator } from './ast';
+import { ASTNode, ASTGenerator } from './ast';
 import { createLogger, ILogger } from '@augu/logging';
 import { promises as fs } from 'fs';
 import { join } from 'path';
@@ -38,8 +38,8 @@ interface DocProject {
 }
 
 interface GeneratorResult {
-  includes?: { [x: string]: ParsedAST; }
-  pages: { [x: string]: ParsedAST; }
+  includes?: { [x: string]: ASTNode[]; }
+  pages: { [x: string]: ASTNode[]; }
 }
 
 async function readDocGenerator(directory: string) {
@@ -125,7 +125,7 @@ export class Generator {
         const include = this.docs.includes[i].replace(/~\//g, this.directory);
         this.logger.debug(`found ${colors.gray(include)} file [${i + 1}/${this.docs.includes.length}]`);
 
-        const parsed = ast.compile(include);
+        const parsed = await ast.compile(include);
 
         this.logger.debug(`grabbed ast of ${colors.gray(include)}`, parsed);
         results.includes![include] = parsed;
@@ -137,7 +137,7 @@ export class Generator {
       this.logger.debug(`found file ${colors.gray(file)} for endpoint ${path}`);
       file = file.replace(/~\//g, this.directory);
 
-      const parsed = ast.compile(file);
+      const parsed = await ast.compile(file);
       this.logger.debug(`compiled ast of page ${colors.gray(file)}`, parsed);
       results.pages[path] = parsed;
     }
