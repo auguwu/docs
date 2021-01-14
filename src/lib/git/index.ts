@@ -36,11 +36,11 @@ interface GitResult {
 export function git(args: string[], cwd?: string) {
   return new Promise<GitResult>((resolve) => exec(`git ${args.join(' ')}`, cwd ? { cwd } : undefined, (error, stdout, stderr) => {
     if (error || stderr) {
-      const std = Buffer.isBuffer(stderr) ? stderr.toString('utf8') || null : stderr;
+      const std = Buffer.isBuffer(stderr) ? stderr.toString('utf8') ?? null : stderr;
       return resolve({ success: false, result: std, code: 1 });
     }
 
     const std = Buffer.isBuffer(stdout) ? stdout.toString('utf8') || null : stdout;
-    return resolve({ success: true, result: std?.trim() || '', code: 0 });
+    return resolve({ success: true, result: std?.trim() ?? '', code: 0 });
   }));
 }
