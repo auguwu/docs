@@ -16,7 +16,7 @@
     "@augu/orchid": "1.8.1",
     "express": "4.17.1",
     "leeks.js": "0.0.9",
-    "tar": "6.0.5"
+    "tar": "6.1.0"
   },
   "devDependencies": {
     "@augu/eslint-config": "1.9.0",
