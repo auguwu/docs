@@ -13,7 +13,7 @@
     "@augu/collections": "1.0.2",
     "@augu/dotenv": "1.2.0",
     "@augu/logging": "2.0.1",
-    "@augu/orchid": "1.8.1",
+    "@augu/orchid": "1.8.2",
     "express": "4.17.1",
     "leeks.js": "0.0.9",
     "ts-morph": "9.1.0"
