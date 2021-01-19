@@ -1,19 +1,29 @@
 {
   "$schema": "http://json-schema.org/schema",
   "description": "Schema for docs.json for the documentation generator",
-  "required": ["name", "pages"],
+  "required": ["name", "moduleType"],
   "properties": {
     "name": {
       "type": "string",
       "description": "The name of the project"
     },
-    "pages": {
-      "type": "array",
-      "description": "The pages to index from to render out Markdown"
-    },
     "includes": {
       "type": "array",
       "description": "Any markdown inclusions to render out using the `include` function"
+    },
+    "moduleType": {
+      "type": "string",
+      "description": "The module type to parse documentation from",
+      "enum": [
+        "typescript",
+        "javascript",
+        "javadoc",
+        "none"
+      ]
+    },
+    "pages": {
+      "type": "object",
+      "description": "List of pages to add when prefixed"
     }
   }
 }
