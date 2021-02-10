@@ -9,7 +9,11 @@
   "scripts": {
     "lint": "eslint src --ext .ts,.tsx --fix"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "dependencies": {
+    "@augu/collections": "1.0.3",
     "@augu/dotenv": "1.2.0",
     "@augu/http": "1.0.1",
     "@microsoft/tsdoc": "0.13.0",

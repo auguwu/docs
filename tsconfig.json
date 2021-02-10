@@ -1,6 +1,8 @@
 {
   "extends": "@augu/tsconfig",
   "compilerOptions": {
+    "typeRoots": ["./src/@types"],
+    "types": ["node"],
     "rootDir": "./src",
     "outDir": "./build"
   }
