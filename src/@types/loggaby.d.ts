@@ -2,6 +2,8 @@
 
 declare module 'loggaby' {
   interface LoggabyLevel {
+    [x: string]: any;
+
     /** Whether to make the level name and message bold and underline (to be noticeable). */
     fatal?: boolean;
 

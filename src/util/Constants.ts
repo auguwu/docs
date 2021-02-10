@@ -31,17 +31,3 @@ export const version: string = require('../../package.json').version;
  * Returns the commit hash of this application
  */
 export const commitHash = execSync('git rev-parse HEAD', { encoding: 'utf8' })?.slice(0, 8) ?? 'unknown';
-
-/**
- * Returns a list of projects to retrieve documentation from
- */
-export const Projects = [
-  'auguwu/collections',
-  'auguwu/dotenv',
-  'auguwu/wumpcord',
-  'auguwu/orchid',
-  'auguwu/cute.floofy.dev',
-  'auguwu/webhooks',
-  'auguwu/http-core',
-  'auguwu/utils'
-] as const;

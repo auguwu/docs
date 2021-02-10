@@ -19,3 +19,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import { Collection } from '@augu/collections';
+
+/**
+ * Represents a container of all cache that has a TTL of 1 hour
+ * until is refreshed using `TTLCache.refresh`.
+ */
+export default class TTLCache<P extends object> {
+  /** Refresh function to use to refresh cache */
+  public refresh: () => Promise<void> | void;
+  public cache: Collection<string, P>;
+
+  #refreshInterval: NodeJS.Timer;
+  #disabled: boolean = false;
+
+  constructor(refresh: () => Promise<void> | void) {
+    this.#refreshInterval = setInterval(() => {
+      if (this.#disabled) return;
+
+      refresh();
+    }, 3600000).unref();
+
+    this.refresh = refresh;
+    this.cache = new Collection();
+  }
+
+  add(key: string, value: P) {
+    return this.cache.set(key, value);
+  }
+
+  dispose() {
+    clearInterval(this.#refreshInterval);
+    this.cache.clear();
+  }
+
+  disable() {
+    if (this.#disabled) throw new Error('TTLCache is already disabled');
+
+    this.#disabled = true;
+    return this;
+  }
+
+  enable() {
+    if (!this.#disabled) throw new Error('TTLCache is already enabled');
+
+    this.#disabled = false;
+    return this;
+  }
+}
