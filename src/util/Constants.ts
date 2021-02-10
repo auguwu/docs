@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 August
+ * Copyright (c) 2020-2021 August
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,12 +37,11 @@ export const commitHash = execSync('git rev-parse HEAD', { encoding: 'utf8' })?.
  */
 export const Projects = [
   'auguwu/collections',
-  'auguwu/maru',
   'auguwu/dotenv',
   'auguwu/wumpcord',
   'auguwu/orchid',
   'auguwu/cute.floofy.dev',
-  'auguwu/logging',
-  'auguwu/docs',
-  'auguwu/webhooks'
-];
+  'auguwu/webhooks',
+  'auguwu/http-core',
+  'auguwu/utils'
+] as const;
