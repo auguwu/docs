@@ -7,7 +7,7 @@
   "homepage": "https://docs.floofy.dev",
   "bugs": "https://github.com/auguwu/docs/issues",
   "scripts": {
-    "lint": "eslint src --ext .js --fix"
+    "lint": "eslint src --ext .ts,.tsx --fix"
   },
   "dependencies": {
     "@augu/dotenv": "1.2.0",
