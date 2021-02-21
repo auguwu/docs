@@ -279,7 +279,7 @@ export default class TypeScriptRenderer {
       return null;
 
     // we don't have any errors, yay! let's walk the ast and fetch what we can!
-    const registry: CommentNodeRegistry[] = [];
+    const registries: CommentNodeRegistry[] = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const sourceFile = program.getSourceFile(file);
@@ -299,9 +299,10 @@ export default class TypeScriptRenderer {
 
       this.logger.debug(`Found ${comments.length} comments in file "${file}", now invoking TSDoc...`);
       this.walkAstAndReturnRegistry(registry);
+      registries.push(registry);
     }
 
-    return registry;
+    return registries;
   }
 
   /**
