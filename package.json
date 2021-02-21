@@ -39,7 +39,7 @@
     "@augu/eslint-config": "1.10.0",
     "@augu/tsconfig": "1.0.1",
     "@types/express": "4.17.11",
-    "@types/node": "14.14.28",
+    "@types/node": "14.14.31",
     "@types/react": "17.0.1",
     "@types/react-dom": "17.0.1",
     "@types/stack-trace": "0.0.29",
