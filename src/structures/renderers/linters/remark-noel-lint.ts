@@ -20,5 +20,9 @@
  * SOFTWARE.
  */
 
-import unified from 'unified';
-import remark from 'remark-parse';
+/**
+ * Specification for linting Markdown files how I want to be
+ */
+export default function RemarkNoelLint() {
+  // todo: owo
+}

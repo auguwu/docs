@@ -38,7 +38,7 @@ export default class Logger {
     const filename = frame.getFileName().split(sep).filter(r => !path.includes(r));
 
     return new Loggaby({
-      format: `{grey}[{level.color}{level.name}{grey} | {magenta}${name}:${filename.join('/').replace('.js', '')}{magenta}{grey}| {cyan}{time}{cyan}{grey}] {white}~>`
+      format: `{grey}[{level.color}{level.name}{grey} | {magenta}${name}:${filename.join('/')}{magenta}{grey}| {cyan}{time}{cyan}{grey}] {white}~>`
     });
   }
 }
