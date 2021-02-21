@@ -23,6 +23,7 @@
 import stacktrace from 'stack-trace';
 import Loggaby from 'loggaby';
 import { sep } from 'path';
+import { strict } from 'node:assert';
 
 const { name } = require('../../package.json');
 
@@ -34,11 +35,11 @@ const path = process.cwd().split(sep);
 export default class Logger {
   static get(): ReturnConstructorType<typeof Loggaby> {
     const error = new Error('Logger.get(): called!');
-    const frame = stacktrace.parse(error).shift()!;
+    const frame = stacktrace.parse(error)[1];
     const filename = frame.getFileName().split(sep).filter(r => !path.includes(r));
 
     return new Loggaby({
-      format: `{grey}[{level.color}{level.name}{grey} | {magenta}${name}:${filename.join('/')}{magenta}{grey}| {cyan}{time}{cyan}{grey}] {white}~>`
+      format: `{grey}[{level.color}{level.name}{grey} | {magenta}${name}:${filename.join('/')}{magenta}{grey} | {cyan}{time}{cyan}{grey}] {white} ~> `
     });
   }
 }

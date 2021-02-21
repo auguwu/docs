@@ -21,4 +21,4 @@
  */
 
 export { ProjectRendererType, getRenderType } from './ProjectRendererType';
-export { default as Project, ProjectMetadata } from './Project';
+//export { default as Project, ProjectMetadata } from './Project';

@@ -21,5 +21,4 @@
  */
 
 export { default as TypeScriptRenderer } from './TypeScript';
-export { default as JavaScriptRenderer } from './JavaScript';
 export { default as MarkdownRenderer } from './Markdown';

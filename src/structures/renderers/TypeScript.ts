@@ -24,11 +24,11 @@
 // isDeclarationKind and getJSDocCommentRanges is also stolen from ^
 
 import { TSDocConfigFile } from '@microsoft/tsdoc-config';
+import * as tsconfig from 'tsconfig';
 import { readdir } from '@augu/utils';
+import * as tsdoc from '@microsoft/tsdoc';
 import { join } from 'path';
-import tsconfig from 'tsconfig';
 import Logger from '../Logger';
-import tsdoc from '@microsoft/tsdoc';
 import ts from 'typescript';
 
 interface CommentNode {
@@ -43,10 +43,16 @@ interface CommentNodeRegistry {
 }
 
 interface Comment {
+  deprecated?: string;
   returns?: string;
   summary: string;
-  params?: string[];
+  params?: Parameter[];
   sees?: string[];
+}
+
+interface Parameter {
+  description: string;
+  name: string;
 }
 
 function _convertESLib() {
@@ -200,37 +206,32 @@ export default class TypeScriptRenderer {
       .getPreEmitDiagnostics(program)
       .concat(result.diagnostics);
 
-    for (let i = 0; i < diagnostics.length; i++) {
-      const diagnostic = diagnostics[i];
+    //for (let i = 0; i < diagnostics.length; i++) {
+    //  const diagnostic = diagnostics[i];
 
-      // get the source file (if any >w>)
-      if (diagnostic.file) {
-        const { line, character: char } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
-        const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n', 2);
+    // get the source file (if any >w>)
+    //  if (diagnostic.file) {
+    //    const { line, character: char } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+    //    const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n', 2);
 
-        this.logger.error(`❌ [${diagnostic.file.fileName}:${line}:${char}] ${message}`);
-      } else {
-        const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n', 2);
-        this.logger.error(`❌ [unknown.ts:0:0]: ${message}`);
-      }
-    }
+    //    this.logger.error(`❌ [${diagnostic.file.fileName}:${line}:${char}]\n${message}`);
+    //  } else {
+    //    const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n', 2);
+    //    this.logger.error(`❌ [unknown.ts:0:0]:\n${message}`);
+    //  }
+    //}
 
-    return { success: diagnostics.length === 0, program };
+    return { success: true, program };
   }
 
   private walkAstAndReturnRegistry(registry: CommentNodeRegistry) {
     for (const comment of registry.nodes) {
       const context = this.compiler.parseRange(comment.textRange);
       const _rawComment = context.docComment;
-
-      if (!context.log.messages.length) {
-        this.logger.info('👍 No errors or warnings found');
-      } else {
-        const sourceFile = comment.node.getSourceFile();
-        for (const message of context.log.messages) {
-          const location = sourceFile.getLineAndCharacterOfPosition(message.textRange.pos);
-          this.logger.error(`❌ [${sourceFile.fileName}:${location.line + 1}:${location.character + 1} (${message.messageId})] ${message.toString()}`);
-        }
+      const sourceFile = comment.node.getSourceFile();
+      for (const message of context.log.messages) {
+        const location = sourceFile.getLineAndCharacterOfPosition(message.textRange.pos);
+        this.logger.error(`❌ [${sourceFile.fileName}:${location.line + 1}:${location.character + 1} (${message.messageId})] ${message.toString()}`);
       }
 
       function renderNode(node: tsdoc.DocNode) {
@@ -248,12 +249,17 @@ export default class TypeScriptRenderer {
       const params = _rawComment.params.blocks.map(param => renderNode(param));
       const returnBlock = _rawComment.returnsBlock !== undefined ? renderNode(_rawComment.returnsBlock) : undefined;
       const seesBlock = _rawComment.seeBlocks.map(block => renderNode(block));
+      const deprecated = _rawComment.deprecatedBlock !== undefined ? renderNode(_rawComment.deprecatedBlock) : undefined;
 
       registry.comments.push({
-        summary,
-        params,
-        returns: returnBlock,
-        sees: seesBlock
+        deprecated: deprecated?.trim().replace(/@deprecated /g, ''),
+        summary: summary.trim(),
+        params: params.map(r => r.trim()).map(param => {
+          const [, name, ...desc] = param.split(' ');
+          return { name, description: desc.join(' ') };
+        }),
+        returns: returnBlock?.trim().replace(/@returns /g, ''),
+        sees: seesBlock?.map(r => r.trim())
       });
     }
   }
@@ -263,16 +269,17 @@ export default class TypeScriptRenderer {
    *
    * @remarks
    * Works in O(N) complexity, so the larger the files, the larger
-   * the renderer takes to load. Use {@see TypeScriptRenderer#renderFile}
+   * the renderer takes to load. Use `TypeScriptRenderer.renderFile`
    * to render the comments of a specific file.
    *
+   * @deprecated Use `owo.my.uwu()` instead!
    * @returns The registry provided or `undefined` if any errors occur
    */
   async render() {
     this.logger.debug(`Told to render all contents in directory "${this.directory}"`);
-    const files = await readdir(join(this.directory, 'src')); // must be top level for .ts files because yes
+    const files = await readdir(this.directory); // must be top level for .ts files because yes
 
-    this.logger.debug(`Found ${files.length} files in "${join(this.directory, 'src')}", rendering...`);
+    this.logger.debug(`Found ${files.length} files in "${this.directory}", rendering...`);
 
     const { success: typeCheckSuccess, program } = await this.typeCheck(files);
     if (!typeCheckSuccess)

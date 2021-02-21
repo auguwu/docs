@@ -4,6 +4,7 @@
     "typeRoots": ["./src/@types"],
     "types": ["node"],
     "rootDir": "./src",
-    "outDir": "./build"
+    "outDir": "./build",
+    "noEmitOnError": false
   }
 }

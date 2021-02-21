@@ -20,5 +20,54 @@
  * SOFTWARE.
  */
 
+import { readdir } from '@augu/utils';
 import unified from 'unified';
+import github from 'remark-github';
 import remark from 'remark-parse';
+import Logger from '../Logger';
+import gfm from 'remark-gfm';
+
+export default class MarkdownRenderer {
+  private directory: string;
+  private compiler: unified.FrozenProcessor;
+  private logger = Logger.get();
+
+  constructor(directory: string) {
+    this.directory = directory;
+    this.compiler = unified()
+      .use(github())
+      .use(remark)
+      .use(gfm)
+      .freeze(); // freeze the compiler so no plugins are added
+  }
+
+  /**
+   * Render all the contents in the directory and return the result
+   *
+   * @remarks
+   * Works in O(N) complexity, so the larger the files, the larger
+   * the renderer takes to load. Use `MarkdownRenderer.renderFile`
+   * to render the Markdown from a specific file.
+   *
+   * @returns The registry provided or `undefined` if any errors occur
+   */
+  async render() {
+    this.logger.debug(`Told to render all contents in directory "${this.directory}"`);
+  }
+
+  /**
+   * Renders a specific file and returns the contents
+   *
+   * @remarks
+   * If you need to traverse over all the files in the directory
+   * this renderer is in, use `MarkdownRenderer.render` to render
+   * all files and returns the registry for all of them. Note that method
+   * works in O(N) complexity; it'll take longer to render all files
+   * than this method.
+   *
+   * @returns The registry provided or `null` if we couldn't get the registry
+   */
+  async renderFile(file: string) {
+    // todo: owo
+  }
+}
