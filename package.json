@@ -40,7 +40,7 @@
     "@augu/tsconfig": "1.0.1",
     "@types/express": "4.17.11",
     "@types/node": "14.14.28",
-    "@types/react": "17.0.1",
+    "@types/react": "17.0.2",
     "@types/react-dom": "17.0.1",
     "@types/stack-trace": "0.0.29",
     "eslint": "7.20.0",
