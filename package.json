@@ -33,7 +33,7 @@
     "stack-trace": "0.0.10",
     "tailwindcss": "2.0.3",
     "tsconfig": "7.0.0",
-    "unified": "9.2.0"
+    "unified": "9.2.1"
   },
   "devDependencies": {
     "@augu/eslint-config": "1.10.0",
