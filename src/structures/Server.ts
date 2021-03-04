@@ -19,21 +19,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import { HttpServer, HttpServerOptions } from '@augu/http';
-import ProjectManager, { Project } from './ProjectManager';
-
-export class Server extends HttpServer {
-  public projects: ProjectManager;
-
-  constructor(options?: HttpServerOptions) {
-    super(options);
-
-    this.projects = new ProjectManager();
-  }
-
-  async start() {
-    await this.projects.init();
-    return super.start();
-  }
-}

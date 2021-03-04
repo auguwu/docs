@@ -20,30 +20,36 @@
  * SOFTWARE.
  */
 
-export enum ProjectRendererType {
-  TypeScript = 'typescript',
-  JavaScript = 'javascript',
-  Markdown   = 'markdown'
+import type Project from './Project';
+
+interface RenderResult {
+  contents: string[];
+  files: string[];
 }
 
-/**
- * Returns the renderer type
- * @param type The type from `docs.json`
- * @throws {TypeError} When the renderer wasn't valid
- * @returns The renderer type
- */
-export function getRenderType(type: string) {
-  switch (type) {
-    case 'typescript':
-      return ProjectRendererType.TypeScript;
+export default abstract class Renderer {
+  public directory: string;
+  public project: Project;
 
-    case 'javascript':
-      return ProjectRendererType.JavaScript;
-
-    case 'markdown':
-      return ProjectRendererType.Markdown;
-
-    default:
-      throw new TypeError(`Renderer '${type}' doesn't exist`);
+  constructor(directory: string, project: Project) {
+    this.directory = directory;
+    this.project   = project;
   }
+
+  /**
+   * Renders all of the content in the directory specified
+   * and returns what was rendered and what files were rendered.
+   *
+   * @remarks
+   * This function is O(N)-complexity, the bigger the data set is,
+   * the longer it'll take. Use `Renderer.renderFile` to render
+   * a single file in the directory.
+   */
+  abstract render(): Promise<RenderResult>;
+
+  /**
+   * Render content from a file in the directory specified
+   * and returns what was rendered.
+   */
+  abstract renderFile(file: string): Promise<string>;
 }

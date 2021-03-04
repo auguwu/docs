@@ -20,5 +20,12 @@
  * SOFTWARE.
  */
 
-export { default as TypeScriptRenderer } from './TypeScript';
-export { default as MarkdownRenderer } from './Markdown';
+// Export defaults here
+export { default as Component } from './internal/Component';
+export { default as Renderer } from './Renderer';
+export { default as Service } from './internal/Service';
+export { default as Project } from './Project';
+export { default as Logger } from './Logger';
+
+// Export from di/*
+export { Inject } from './di';

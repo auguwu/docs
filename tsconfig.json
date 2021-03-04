@@ -6,5 +6,7 @@
     "rootDir": "./src",
     "outDir": "./build",
     "noEmitOnError": false
-  }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

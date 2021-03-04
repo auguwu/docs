@@ -23,12 +23,11 @@
 import stacktrace from 'stack-trace';
 import Loggaby from 'loggaby';
 import { sep } from 'path';
-import { strict } from 'node:assert';
 
 const { name } = require('../../package.json');
 
 type ReturnConstructorType<T extends new (...args: any[]) => any> =
-  T extends new (...args: any[]) => infer P ? P : any;
+  T extends new (...args: any[]) => infer P ? P : never;
 
 const path = process.cwd().split(sep);
 
