@@ -32,7 +32,7 @@
     "remark-parse": "9.0.0",
     "sass": "1.32.8",
     "stack-trace": "0.0.10",
-    "tailwindcss": "2.0.3",
+    "tailwindcss": "2.0.4",
     "unified": "9.2.1"
   },
   "devDependencies": {
