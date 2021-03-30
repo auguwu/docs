@@ -21,7 +21,7 @@
     "autoprefixer": "10.2.4",
     "express": "4.17.1",
     "loggaby": "4.0.3",
-    "next": "10.0.7",
+    "next": "10.1.2",
     "postcss": "8.2.7",
     "postcss-import": "14.0.0",
     "react": "17.0.1",
