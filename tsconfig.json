@@ -1,12 +1,13 @@
 {
   "extends": "@augu/tsconfig",
   "compilerOptions": {
-    "typeRoots": ["./src/@types"],
-    "types": ["node"],
+    "moduleResolution": "node",
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
+    "sourceMap": true,
     "rootDir": "./src",
-    "outDir": "./build",
-    "noEmitOnError": false
+    "types": ["node", "reflect-metadata", "@augu/utils"],
+    "outDir": "./build"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.ts"]
 }

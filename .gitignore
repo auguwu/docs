@@ -1,8 +1,6 @@
 node_modules/
-.cache/
+static/cache/
 build/
-logs/
-old/
-.env
 
-yarn.lock
+*.lock
+*.log

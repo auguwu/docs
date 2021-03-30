@@ -20,36 +20,31 @@
  * SOFTWARE.
  */
 
-import type Project from './Project';
+import 'source-map-support/register';
+import 'reflect-metadata';
 
-interface RenderResult {
-  contents: string[];
-  files: string[];
-}
+import logger from './singletons/logger';
+import app from './container';
 
-export default abstract class Renderer {
-  public directory: string;
-  public project: Project;
+(async function main() {
+  logger.info('Initializing docs...');
+  try {
+    await app.verify();
+  } catch(ex) {
+    logger.error('Unable to verify application state');
+    logger.fatal(ex);
 
-  constructor(directory: string, project: Project) {
-    this.directory = directory;
-    this.project   = project;
+    process.exit(1);
   }
 
-  /**
-   * Renders all of the content in the directory specified
-   * and returns what was rendered and what files were rendered.
-   *
-   * @remarks
-   * This function is O(N)-complexity, the bigger the data set is,
-   * the longer it'll take. Use `Renderer.renderFile` to render
-   * a single file in the directory.
-   */
-  abstract render(): Promise<RenderResult>;
+  logger.info('Application state has been verified');
+  process.on('SIGINT', () => {
+    logger.warn('Received CTRL+C call, exiting');
 
-  /**
-   * Render content from a file in the directory specified
-   * and returns what was rendered.
-   */
-  abstract renderFile(file: string): Promise<string>;
-}
+    app.dispose();
+    process.exit(0);
+  });
+})();
+
+process.on('unhandledRejection', error => console.error('Unhandled promise rejection has occured\n', error));
+process.on('uncaughtException', error => console.error('Uncaught exception has occured\n', error));

@@ -20,12 +20,38 @@
  * SOFTWARE.
  */
 
-// Export defaults here
-export { default as Component } from './internal/Component';
-export { default as Renderer } from './Renderer';
-export { default as Service } from './internal/Service';
-export { default as Project } from './Project';
-export { default as Logger } from './Logger';
+import { Component, Inject } from '@augu/lilith';
+import { Application } from 'typedoc';
+import { Logger } from 'tslog';
+import { join } from 'path';
+import Projects from './Projects';
 
-// Export from di/*
-export { Inject } from './di';
+export default class Typedoc implements Component {
+  public priority: number = 1;
+  private app!: Application;
+  public name: string = 'typedoc';
+
+  @Inject
+  private projects!: Projects;
+
+  @Inject
+  private logger!: Logger;
+
+  load() {
+    this.logger.info(`Loading in ${this.projects.size} projects...`);
+    this.app = new Application();
+    this.app.bootstrap({
+      highlightTheme: 'nord',
+      tsconfig: join(__dirname, '..', '..', 'tsconfig.json'),
+      logger: msg => this.logger.silly(`TypeDoc: ${msg}`),
+      readme: join(__dirname, '..', '..', 'static', 'index.md'),
+      name: 'docs.floofy.dev'
+    });
+
+    console.log(this.app);
+
+    //const sauce = this.app.expandInputFiles([
+    //  '../../static/cache/**/*.ts'
+    //]);
+  }
+}

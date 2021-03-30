@@ -19,3 +19,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import { Component, Inject } from '@augu/lilith';
+import { Logger } from 'tslog';
+import http from 'http';
+import { request } from 'node:http';
+
+export default class HttpServer implements Component {
+  public priority: number = 2;
+  private server!: http.Server;
+  public name: string = 'http';
+
+  @Inject
+  private logger!: Logger;
+
+  load() {
+    this.logger.info('Initializing server...');
+    this.server = http.createServer((req, res) => this.onRequest.call(this, req, res));
+
+    this.server.once('listening', () => this.logger.info('Listening at http://localhost:17093'));
+    this.server.on('error', e => this.logger.fatal(e));
+
+    this.server.listen(17093);
+  }
+
+  dispose() {
+    return this.server.close();
+  }
+
+  private onRequest(req: http.IncomingMessage, res: http.ServerResponse) {
+    if (req.url! === '/favicon.ico') {
+      res.setHeader('content-type', 'application/json; charset=utf-8');
+      res.statusCode = 404;
+
+      return res.end(JSON.stringify({
+        message: 'favicon.ico was not found.'
+      }));
+    }
+
+    console.log(req.url);
+    return res.end('{"uwu":"owo"}');
+  }
+}
