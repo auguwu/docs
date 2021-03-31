@@ -19,11 +19,11 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@augu/collections": "^1.0.4",
+    "@augu/collections": "1.0.4",
     "@augu/lilith": "1.2.0",
     "@augu/utils": "1.4.2",
     "reflect-metadata": "0.1.13",
-    "rimraf": "^3.0.2",
+    "rimraf": "3.0.2",
     "simple-git": "2.37.0",
     "source-map-support": "0.5.19",
     "tslog": "3.1.2",
@@ -34,7 +34,7 @@
     "@augu/tsconfig": "1.0.1",
     "@types/express": "4.17.11",
     "@types/node": "14.14.37",
-    "@types/rimraf": "^3.0.0",
+    "@types/rimraf": "3.0.0",
     "@typescript-eslint/eslint-plugin": "4.14.1",
     "@typescript-eslint/parser": "4.14.1",
     "eslint": "7.23.0",
