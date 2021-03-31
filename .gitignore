@@ -1,5 +1,6 @@
 node_modules/
 static/cache/
+static/docs/
 build/
 
 *.lock

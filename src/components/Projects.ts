@@ -20,21 +20,55 @@
  * SOFTWARE.
  */
 
+import { readdirSync, existsSync } from 'fs';
+import { Component, Inject } from '@augu/lilith';
+import { mkdir, unlink } from 'fs/promises';
 import { Collection } from '@augu/collections';
-import { Component } from '@augu/lilith';
+import gitFactory from 'simple-git/promise';
+import { Logger } from 'tslog';
+import { join } from 'path';
+import _rimraf from 'rimraf';
 
 // const escapeName = (text: string) => text.replace(/@augu\//gi, '').toLowerCase();
 
+const rimraf = (path: string) => new Promise<void>((resolve, reject) => _rimraf(path, (error) => error !== undefined ? resolve() : reject(error)));
+
 interface Project {
+  cacheDirName?: string;
   escapedName: string;
   branches: string[];
   github: string;
   name: string;
 }
 
+const REMOVE_DIRS = [
+  '.github',
+  '.vscode',
+  'docs',
+  'examples',
+  'tests',
+  'scripts'
+] as const;
+
+const REMOVE_FILES = [
+  '.eslintignore',
+  '.eslintrc.json',
+  '.gitignore',
+  '.npmignore',
+  '.travis.yml',
+  'esm.mjs',
+  'index.d.ts',
+  'jest.config.js',
+  'renovate.json',
+  'tsconfig.test.json'
+] as const;
+
 export default class Projects extends Collection<string, Project> implements Component {
   public priority: number = 0;
   public name: string = 'projects';
+
+  @Inject
+  private logger!: Logger;
 
   load() {
     // now it's time for hell
@@ -44,7 +78,54 @@ export default class Projects extends Collection<string, Project> implements Com
       escapedName: 'collections',
       branches: ['master'],
       github: 'https://github.com/auguwu/collections',
-      name: 'string'
+      name: '@augu/collections'
     });
+
+    this.set('wumpcord', {
+      escapedName: 'wumpcord',
+      branches: ['master', 'index'],
+      github: 'https://github.com/auguwu/Wumpcord',
+      name: 'wumpcord'
+    });
+
+    return this.init();
+  }
+
+  private async init() {
+    const CACHE_DIR = join(__dirname, '..', '..', 'static', 'cache');
+    if (!existsSync(CACHE_DIR))
+      await mkdir(CACHE_DIR);
+
+    for (const project of this.values()) {
+      this.logger.debug(`Projects: Initializing project ${project.name}...`);
+      if (!existsSync(join(CACHE_DIR, project.escapedName)))
+        await mkdir(join(CACHE_DIR, project.escapedName));
+
+      this.logger.debug(`Projects [${project.name}]: Created Git factory.`);
+      const git = gitFactory(join(CACHE_DIR, project.escapedName));
+      for (const branch of project.branches.filter(r => r === 'master')) { // yea sucks but simple-git has no -b support?
+        if (existsSync(join(CACHE_DIR, project.escapedName, `branch_${branch}`))) {
+          this.logger.debug(`Projects [${project.name}/${branch}]: Repository already exists, now pulling changes...`);
+          await git.pull();
+        } else {
+          this.logger.debug(`Projects [${project.name}/${branch}]: Repository already exists, now pulling changes...`);
+          await git.clone(project.github, `branch_${branch}`);
+        }
+      }
+
+      this.logger.debug(`Projects [${project.name}]: Setup ${project.branches.length} branches successfully(?)`);
+      this.logger.debug(`Projects [${project.name}]: Now cleaning...`);
+
+      const files = readdirSync(join(CACHE_DIR, project.escapedName, 'branch_master'));
+      for (let i = 0; i < files.length; i++) {
+        if (REMOVE_DIRS.includes(files[i] as any))
+          await rimraf(join(CACHE_DIR, project.escapedName, 'branch_master', files[i]));
+
+        if (REMOVE_FILES.includes(files[i] as any))
+          await unlink(join(CACHE_DIR, project.escapedName, 'branch_master', files[i]));
+      }
+
+      this.logger.debug(`Projects [${project.name}]: Cleaned successfully`);
+    }
   }
 }

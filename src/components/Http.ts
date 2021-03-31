@@ -23,7 +23,6 @@
 import { Component, Inject } from '@augu/lilith';
 import { Logger } from 'tslog';
 import http from 'http';
-import { request } from 'node:http';
 
 export default class HttpServer implements Component {
   public priority: number = 2;

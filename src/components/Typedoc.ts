@@ -20,15 +20,17 @@
  * SOFTWARE.
  */
 
+import { Application, TSConfigReader, TypeDocReader } from 'typedoc';
 import { Component, Inject } from '@augu/lilith';
-import { Application } from 'typedoc';
+import { join, resolve } from 'path';
+import { existsSync } from 'fs';
 import { Logger } from 'tslog';
-import { join } from 'path';
+import { mkdir } from 'fs/promises';
+import { exec } from 'child_process';
 import Projects from './Projects';
 
 export default class Typedoc implements Component {
   public priority: number = 1;
-  private app!: Application;
   public name: string = 'typedoc';
 
   @Inject
@@ -37,21 +39,34 @@ export default class Typedoc implements Component {
   @Inject
   private logger!: Logger;
 
-  load() {
+  async load() {
     this.logger.info(`Loading in ${this.projects.size} projects...`);
-    this.app = new Application();
-    this.app.bootstrap({
-      highlightTheme: 'nord',
-      tsconfig: join(__dirname, '..', '..', 'tsconfig.json'),
-      logger: msg => this.logger.silly(`TypeDoc: ${msg}`),
-      readme: join(__dirname, '..', '..', 'static', 'index.md'),
-      name: 'docs.floofy.dev'
-    });
+    for (const project of this.projects.values()) {
+      const app = new Application();
+      app.options.addReader(new TypeDocReader());
+      app.options.addReader(new TSConfigReader());
 
-    console.log(this.app);
+      app.bootstrap({
+        excludeProtected: true,
+        highlightTheme: 'nord',
+        excludePrivate: true,
+        entryPoints: [resolve(process.cwd(), '..', 'static', 'cache', project.escapedName, 'branch_master', 'src')],
+        tsconfig: resolve(process.cwd(), '..', 'static', 'cache', project.escapedName, 'branch_master', 'tsconfig.json'),
+        logger: (msg: string) => this.logger.silly(`Typedoc [${project.name}]:    ${msg}`),
+        readme: resolve(process.cwd(), '..', 'static', 'cache', project.escapedName, 'branch_master', 'README.md'),
+        name: project.name
+      });
 
-    //const sauce = this.app.expandInputFiles([
-    //  '../../static/cache/**/*.ts'
-    //]);
+      const reflection = app.convert();
+      if (reflection !== undefined) {
+        this.logger.info(`Typedoc [${project.name}]:    Created project reflection, now exporting...`);
+        if (!existsSync(join(process.cwd(), '..', 'static', 'docs', project.escapedName, 'branch_master')))
+          await mkdir(join(process.cwd(), '..', 'static', 'docs', project.escapedName, 'branch_master'), { recursive: true });
+
+        await app.generateDocs(reflection, join(process.cwd(), '..', 'static', 'docs', project.escapedName, 'branch_master'));
+      }
+    }
+
+    return Promise.resolve(); // resolve
   }
 }
