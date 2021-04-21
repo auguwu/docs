@@ -19,7 +19,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@augu/collections": "^1.0.4",
+    "@augu/collections": "1.0.8",
     "@augu/lilith": "1.2.0",
     "@augu/utils": "1.4.2",
     "reflect-metadata": "0.1.13",
