@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020-2021 August
+ * Copyright (c) 2020-2021 Noelware
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,32 +19,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import 'source-map-support/register';
-import 'reflect-metadata';
-
-import logger from './singletons/logger';
-import app from './container';
-
-(async function main() {
-  logger.info('Initializing docs...');
-  try {
-    await app.verify();
-  } catch(ex) {
-    logger.error('Unable to verify application state');
-    logger.fatal(ex);
-
-    process.exit(1);
-  }
-
-  logger.info('Application state has been verified');
-  process.on('SIGINT', () => {
-    logger.warn('Received CTRL+C call, exiting');
-
-    app.dispose();
-    process.exit(0);
-  });
-})();
-
-process.on('unhandledRejection', error => console.error('Unhandled promise rejection has occured\n', error));
-process.on('uncaughtException', error => console.error('Uncaught exception has occured\n', error));

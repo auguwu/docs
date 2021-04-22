@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020-2021 August
+ * Copyright (c) 2020-2021 Noelware
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,16 +19,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import { Application } from '@augu/lilith';
-import { join } from 'path';
-import logger from './singletons/logger';
-
-const app = new Application()
-  .findComponentsIn(join(process.cwd(), 'components'));
-
-app.on('component.initializing', c => logger.debug(`Lilith: Initializing component ${c.name}`));
-app.on('component.loaded', c => logger.debug(`Lilith: Component ${c.name} has been initialized.`));
-
-app.addSingleton(logger);
-export default app;

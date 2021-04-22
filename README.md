@@ -1,5 +1,5 @@
-# docs.floofy.dev
-> :pencil2: **Documentation site for my projects**
+# Camellia
+> 🚀🌻 **椿 ("camellia") is where all Markdown-related documentation is hosted for my projects, made with Gatsby.js**
 
 ## License
-**docs.floofy.dev** is released under the **MIT** License. Read [here](/LICENSE) for more information.
+**椿 ("camellia")** is released under MIT License. 💖
