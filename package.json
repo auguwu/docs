@@ -9,13 +9,25 @@
   "bugs": "https://github.com/Noelware/camellia/issues",
   "scripts": {},
   "dependencies": {
+    "@augu/collections": "^1.0.8",
+    "@augu/http": "1.2.1",
     "@augu/lilith": "2.3.0",
     "@augu/utils": "1.5.0",
     "fastify": "3.15.0",
     "next": "10.1.3",
     "postcss": "8.2.10",
+    "rehype-minify-whitespace": "^4.0.5",
+    "remark": "13.0.0",
+    "remark-gfm": "1.0.0",
+    "remark-github": "10.0.1",
+    "remark-mdx": "^1.6.22",
+    "remark-squeeze-paragraphs": "^4.0.0",
+    "remark-typedoc-symbol-links": "1.2.0",
     "sass": "1.32.11",
-    "tslog": "3.2.0"
+    "shiki": "0.9.3",
+    "tslog": "3.2.0",
+    "typedoc": "0.20.36",
+    "unified": "9.2.1"
   },
   "devDependencies": {
     "@augu/eslint-config": "2.0.3",
@@ -26,6 +38,7 @@
     "@typescript-eslint/parser": "4.22.0",
     "eslint": "7.24.0",
     "husky": "6.0.0",
+    "stylelint": "13.13.1",
     "typescript": "4.2.4"
   }
 }
