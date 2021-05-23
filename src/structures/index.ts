@@ -20,24 +20,5 @@
  * SOFTWARE.
  */
 
-import 'reflect-metadata';
-
-import { Logger } from 'tslog';
-import TypeScriptRenderer from './renderers/TypeScriptRenderer';
-
-(async() => {
-  const renderer = new TypeScriptRenderer();
-  // @ts-ignore
-  renderer.logger = new Logger();
-
-  await renderer.init([
-    {
-      name: 'orchid',
-      github: 'https://github.com/Noelware/orchid',
-      branches: ['master', '1.x', '2.x'],
-      type: 'typescript'
-    }
-  ]);
-
-  console.log(renderer['appCache']);
-})();
+export { AbstractRenderer, RenderResult } from './AbstractRenderer';
+export * from './decorators';

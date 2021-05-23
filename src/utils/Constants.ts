@@ -20,24 +20,27 @@
  * SOFTWARE.
  */
 
-import 'reflect-metadata';
+import { execSync } from 'child_process';
 
-import { Logger } from 'tslog';
-import TypeScriptRenderer from './renderers/TypeScriptRenderer';
+/**
+ * Returns the current version of Camellia
+ */
+export const version: string = require('../../package.json').version;
 
-(async() => {
-  const renderer = new TypeScriptRenderer();
-  // @ts-ignore
-  renderer.logger = new Logger();
-
-  await renderer.init([
-    {
-      name: 'orchid',
-      github: 'https://github.com/Noelware/orchid',
-      branches: ['master', '1.x', '2.x'],
-      type: 'typescript'
-    }
-  ]);
-
-  console.log(renderer['appCache']);
+/**
+ * Returns the git commit hash.
+ */
+export const commitHash: string | null = (() => {
+  try {
+    const hash = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+    return hash.slice(0, 8);
+  } catch {
+    return null;
+  }
 })();
+
+export const enum MetadataKeys {
+  Renderer = '$camellia::metadata::renderer',
+  Endpoint = '$camellia::metadata::endpoint',
+  Route    = '$camellia::metadata::route'
+}

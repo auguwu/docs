@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declaration": true,
     "moduleResolution": "node",
-    "types": ["node"],
+    "types": ["node", "@augu/utils", "reflect-metadata"],
     "outDir": "./build",
     "rootDir": "./src"
   },

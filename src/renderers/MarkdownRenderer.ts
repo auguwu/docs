@@ -20,10 +20,18 @@
  * SOFTWARE.
  */
 
-import Highlighter from '../utils/highlighter';
+import { Renderer, AbstractRenderer, RenderResult } from '../structures';
+import { Logger } from 'tslog';
+import { Inject } from '@augu/lilith';
+import LRUCache from 'lru-cache';
 
-export class MarkdownRenderer {
-  static async getCompiler() {
-    return Highlighter.highlighter();
+@Renderer('markdown')
+export default class MarkdownRenderer implements AbstractRenderer {
+  @Inject
+  private readonly logger!: Logger;
+  private readonly cache: LRUCache<string, RenderResult> = new LRUCache(100_000); // it shouldn't go that high but u never know lol
+
+  async render(): Promise<any> {
+    throw new TypeError('Markdown renderer is not supported at this moment.');
   }
 }

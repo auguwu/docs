@@ -20,24 +20,23 @@
  * SOFTWARE.
  */
 
-import 'reflect-metadata';
-
+import { Renderer, AbstractRenderer, RenderResult } from '../structures';
 import { Logger } from 'tslog';
-import TypeScriptRenderer from './renderers/TypeScriptRenderer';
+import { Inject } from '@augu/lilith';
+import LRUCache from 'lru-cache';
+import jsdoc from 'jsdoc-api';
 
-(async() => {
-  const renderer = new TypeScriptRenderer();
-  // @ts-ignore
-  renderer.logger = new Logger();
+@Renderer('javascript')
+export default class JavaScriptRenderer implements AbstractRenderer {
+  @Inject
+  private readonly logger!: Logger;
+  private readonly cache: LRUCache<string, RenderResult> = new LRUCache(100_000); // it shouldn't go that high but u never know lol
 
-  await renderer.init([
-    {
-      name: 'orchid',
-      github: 'https://github.com/Noelware/orchid',
-      branches: ['master', '1.x', '2.x'],
-      type: 'typescript'
-    }
-  ]);
-
-  console.log(renderer['appCache']);
-})();
+  async render() {
+    return Promise.resolve<RenderResult>({
+      editThisDocUri: '',
+      githubUri: '',
+      content: 'insert some content here lmao'
+    });
+  }
+}

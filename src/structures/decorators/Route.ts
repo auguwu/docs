@@ -20,24 +20,8 @@
  * SOFTWARE.
  */
 
-import 'reflect-metadata';
+import { MetadataKeys } from '../../utils/Constants';
 
-import { Logger } from 'tslog';
-import TypeScriptRenderer from './renderers/TypeScriptRenderer';
-
-(async() => {
-  const renderer = new TypeScriptRenderer();
-  // @ts-ignore
-  renderer.logger = new Logger();
-
-  await renderer.init([
-    {
-      name: 'orchid',
-      github: 'https://github.com/Noelware/orchid',
-      branches: ['master', '1.x', '2.x'],
-      type: 'typescript'
-    }
-  ]);
-
-  console.log(renderer['appCache']);
-})();
+export function Route(path: string): MethodDecorator {
+  return (target) => Reflect.defineMetadata(MetadataKeys.Route, { path }, target);
+}

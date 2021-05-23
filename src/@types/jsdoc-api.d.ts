@@ -20,6 +20,46 @@
  * SOFTWARE.
  */
 
-import typedoc from 'typedoc';
+// NOTE: This is not a full declaration file!
+// This is used for Camellia only.
 
-export class TSRenderer {}
+/** */
+declare module 'jsdoc-api' {
+  interface ExplainResult {
+    description?: string;
+    longname?: string;
+    comment: string;
+    memberof?: string;
+    params?: Record<string, JsDocParam>[];
+    scope: string;
+    meta: ExplainMeta;
+    kind: string;
+    name: string;
+    undocumented?: boolean;
+  }
+
+  interface JsDocParam {
+    description: string;
+    name: string;
+  }
+
+  interface ExplainMeta {
+    range: [number, number];
+    filename: string;
+    lineno: number;
+    columnno: string;
+    path: string;
+    code: ExplainCodeMeta;
+    vars: Record<string, null>;
+  }
+
+  interface ExplainCodeMeta {
+    id: string;
+    name: string;
+    type: string;
+    paramnames: string[];
+  }
+
+  // only function i'll use
+  export function explainSync({ source }: { source: string }): ExplainResult;
+}
