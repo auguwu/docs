@@ -32,20 +32,24 @@ export default class Highlighter {
   ]);
 
   static get SUPPORTED_LANGUAGES() {
-    return Array.from(new Set(
-      ...this.aliases.keys(),
-      ...shiki.BUNDLED_LANGUAGES.map(lang => lang.id),
-      'text'
-    ));
+    const languages = ([] as string[]).concat(
+      this.aliases.toArray(),
+      shiki.BUNDLED_LANGUAGES.map(l => l.id),
+      ['text']
+    );
+
+    return [...new Set(languages)];
   }
 
-  static initHighlighter() {
+  static async highlighter() {
     if (this._highlighter !== undefined)
-      return this._highlighter;
+      return Promise.resolve(this._highlighter);
 
-    return shiki.getHighlighter({
+    this._highlighter = await shiki.getHighlighter({
       theme: 'nord'
     });
+
+    return this._highlighter;
   }
 
   static render(code: string, lang: string) {
@@ -59,6 +63,7 @@ export default class Highlighter {
     const result: string[] = [];
 
     for (const token of this._highlighter.codeToThemedTokens(code, lang, 'nord', { includeExplanation: false })) {
+      console.log(token);
       for (const line of token) {
         result.push(`
           <span style="color:${line.color ?? '#000'}">

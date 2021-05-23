@@ -1,8 +1,12 @@
 {
-  "extends": "@augu/tsconfig/dom.json",
+  "extends": "@augu/tsconfig",
   "compilerOptions": {
-    "noEmit": true
+    "declaration": true,
+    "moduleResolution": "node",
+    "types": ["node"],
+    "outDir": "./build",
+    "rootDir": "./src"
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

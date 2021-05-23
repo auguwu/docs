@@ -19,3 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import { MarkdownRenderer } from './renderer/MarkdownRenderer';
+import Highlighter from './utils/highlighter';
+
+(async() => {
+  // TODO: this
+})();
