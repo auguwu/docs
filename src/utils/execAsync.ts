@@ -20,22 +20,10 @@
  * SOFTWARE.
  */
 
-import 'reflect-metadata';
+import { ExecOptions, exec } from 'child_process';
 
-import { Logger } from 'tslog';
-import TypeScriptRenderer from './renderers/TypeScriptRenderer';
-
-(async() => {
-  const renderer = new TypeScriptRenderer();
-  // @ts-ignore
-  renderer.logger = new Logger();
-
-  await renderer.init([
-    {
-      name: 'orchid',
-      github: 'https://github.com/Noelware/orchid',
-      branches: ['master', '1.x', '2.x'],
-      type: 'typescript'
-    }
-  ]);
-})();
+export default function execAsync(command: string, options?: ExecOptions) {
+  return new Promise<string>((resolve, reject) => exec(command, options, (error, stdout, stderr) =>
+    error !== null ? reject(new Error(Buffer.isBuffer(stderr) ? stderr.toString() : stderr)) : resolve(Buffer.isBuffer(stdout) ? stdout.toString() : stdout)
+  ));
+}

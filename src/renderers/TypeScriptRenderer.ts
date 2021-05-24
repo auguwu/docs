@@ -29,7 +29,10 @@ import * as typedoc from 'typedoc';
 import { exec } from 'child_process';
 import { join } from 'path';
 import { existsSync } from 'fs';
-import { mkdir, rmdir } from 'fs/promises';
+import { mkdir } from 'fs/promises';
+import ts from 'typescript';
+import { readdir } from '@augu/utils';
+import execAsync from '../utils/execAsync';
 
 @Renderer('typescript')
 export default class TypeScriptRenderer implements AbstractRenderer<[string, string]> {
@@ -52,6 +55,20 @@ export default class TypeScriptRenderer implements AbstractRenderer<[string, str
       for (let j = 0; j < branches.length; j++) {
         await this._createGitBranchCache(project.name, project.github, branches[j]);
         const app = await this._createApplication(project.name, branches[j]);
+
+        // Change directory
+        const currDir = process.cwd();
+        process.chdir(join(process.cwd(), '..', '.camellia', 'typescript', `${project.name}_${branches[j]}`));
+
+        // Get reflection on project
+        const reflection = app.convert();
+        if (reflection !== undefined) {
+          this.logger.info(`retrieved reflection for ${project.name} (branch: ${branches[j]})`);
+          await app.generateJson(reflection, join(process.cwd(), '..', 'reflection', `${project.name}_${branches[j]}`, 'out.json'));
+        }
+
+        // put it back to the actual current directory
+        process.chdir(currDir);
       }
     }
   }
@@ -62,23 +79,62 @@ export default class TypeScriptRenderer implements AbstractRenderer<[string, str
     if (!existsSync(CACHE_DIR))
       await mkdir(CACHE_DIR, { recursive: true });
 
-    const child = exec(`git clone ${githubUri} "${name}_${branch}" -b ${branch} `, {
+    await execAsync(`git clone ${githubUri} "${name}_${branch}" -b ${branch}`, {
       cwd: join(process.cwd(), '..', '.camellia', 'typescript')
     });
 
-    child.stdout?.on('data', chunk => this.logger.info(`\n${chunk}`));
-    child.stderr?.on('data', chunk => this.logger.info(`\n${chunk}`));
-
-    child.once('exit', code =>
-      this.logger.info(code === 0 ? `Cloned to "${join(CACHE_DIR, `${name}_${branch}`)}" successfully.` : 'Didn\'t create.')
-    );
+    await execAsync('npm install', {
+      cwd: join(process.cwd(), '..', '.camellia', 'typescript', `${name}_${branch}`)
+    });
   }
 
   async _createApplication(name: string, branch: string) {
     this.logger.info(`created typedoc app for "${name}" under branch ${branch}.`);
     const app = new typedoc.Application();
-    app.bootstrap();
+    const CACHE_DIR = join(process.cwd(), '..', '.camellia', 'typescript', `${name}_${branch}`);
+
+    app.bootstrap({
+      entryPoints: ['src/**/*.ts'],
+      excludeInternal: true,
+      excludePrivate: true,
+      excludeProtected: true,
+      includeVersion: true,
+      readme: 'README.md',
+      gitRemote: branch
+    });
+
+    const files = await readdir(join(CACHE_DIR, 'src'));
+    console.log(files);
+
+    app.options.setCompilerOptions(
+      files,
+      {
+        target: ts.ScriptTarget.ESNext,
+        module: ts.ModuleKind.CommonJS,
+        lib: ['ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', 'ESNext']
+          .map(lib => `lib.${lib.toLowerCase()}.d.ts`),
+
+        declaration: false,
+        strict: true,
+        noImplicitAny: false, // because fuck you :D
+        allowSyntheticDefaultImports: true,
+        esModuleInterop: true,
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+        newLine: ts.NewLineKind.LineFeed,
+        noEmitOnError: true,
+        forceConsistentCasingInFileNames: true,
+        removeComments: true,
+
+        moduleResolution: ts.ModuleResolutionKind.NodeJs,
+        rootDir: join(CACHE_DIR, 'src'),
+        outDir: join(CACHE_DIR, 'build'),
+        types: ['node', '@augu/utils']
+      },
+      []
+    );
 
     this.appCache.set(`${name}:${branch}`, app);
+    return app;
   }
 }
