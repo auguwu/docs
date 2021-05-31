@@ -10,7 +10,7 @@
   "scripts": {},
   "dependencies": {
     "@augu/collections": "1.0.8",
-    "@augu/lilith": "3.0.4",
+    "@augu/lilith": "3.2.4",
     "@augu/utils": "1.5.3",
     "fastify": "3.15.1",
     "fastify-cors": "6.0.1",
