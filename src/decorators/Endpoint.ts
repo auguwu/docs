@@ -15,17 +15,3 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-import { Logger } from 'tslog';
-import { Inject } from '@augu/lilith';
-import LRUCache from 'lru-cache';
-
-export default class MarkdownRenderer {
-  @Inject
-  private readonly logger!: Logger;
-  private readonly cache = new LRUCache<string, string>({ max: 100_000, maxAge: 518400000 });
-
-  async init() {
-    this.logger.info('Told to initialize');
-  }
-}

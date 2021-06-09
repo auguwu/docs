@@ -71,3 +71,4 @@ yarn-error.log
 # Config
 config.yml
 .camellia/
+build/
