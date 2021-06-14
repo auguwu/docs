@@ -15,3 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+import MarkdownRenderer from './renderers/MarkdownRenderer';
+
+const renderer = new MarkdownRenderer();
+(async() => {
+  const contents = await renderer.init();
+  console.log(contents.toString());
+})();

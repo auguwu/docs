@@ -16,16 +16,44 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Logger } from 'tslog';
-import { Inject } from '@augu/lilith';
+import stringify from 'rehype-stringify';
 import LRUCache from 'lru-cache';
+import markdown from 'remark-parse';
+import mdToHtml from 'remark-rehype';
+import unified from 'unified';
+import gfm from 'remark-gfm';
+import raw from 'rehype-raw';
+import log from '../singletons/logger';
+
+// simple module to convert highlight-js -> shiki
+const rehypeCodeblock = (visitor: any) => {
+  const _visitor = (node: any) => {
+    console.log(node);
+  };
+
+  return () => (tree: any) => visitor(tree, 'code', _visitor);
+};
 
 export default class MarkdownRenderer {
-  @Inject
-  private readonly logger!: Logger;
   private readonly cache = new LRUCache<string, string>({ max: 100_000, maxAge: 518400000 });
+  public compiler = unified()
+    .use(markdown)
+    .use(gfm)
+    .use(mdToHtml, { allowDangerousHtml: true, passThrough: ['raw'] })
+    .use(raw);
+
+  private get logger() {
+    return log.getChildLogger({ name: 'camellia :: renderers :: markdown' });
+  }
 
   async init() {
-    this.logger.info('Told to initialize');
+    this.logger.info('rendering...');
+
+    // why are you a module AAAAAAAAAA
+    const { visit } = await import('unist-util-visit');
+    this.compiler.use(rehypeCodeblock(visit)).use(stringify).freeze(); // make it a freezed processor
+
+    return this.compiler.process('# Hello world?\n> What is this...?\n\n```js\nvar x = y;```')
+      .then(r => r.contents.toString());
   }
 }
