@@ -24,7 +24,7 @@
     "js-yaml": "4.1.0",
     "jsdoc-api": "7.0.1",
     "lru-cache": "6.0.0",
-    "next": "10.2.3",
+    "next": "11.0.0",
     "postcss": "8.3.2",
     "postcss-import": "14.0.2",
     "postcss-scss": "3.0.5",
