@@ -18,7 +18,7 @@
     "@augu/utils": "1.5.3",
     "autoprefixer": "10.2.6",
     "cssnano": "5.0.6",
-    "fastify": "3.17.0",
+    "fastify": "3.18.0",
     "fastify-cors": "6.0.1",
     "gray-matter": "4.0.3",
     "js-yaml": "4.1.0",
