@@ -1,0 +1,23 @@
+name: Workflow for https://docs.floofy.dev
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+    paths-ignore:
+      - '.github/**'
+      - '.husky/**'
+      - '.vscode/**'
+      - 'assets/**'
+      - 'locales/**'
+      - 'docker/**'
+      - '.dockerignore'
+      - '.eslintignore'
+      - '.gitignore'
+      - '**.md'
+      - 'LICENSE'
+      - 'renovate.json'
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
