@@ -85,6 +85,7 @@ Coming soon.
 
 ### Path Parameters
 |Name|Type|Description|Required|
+|----|----|-----------|--------|
 |`login`|String|GitHub user to check sponsorships|true|
 |`private`|Boolean|If the payload should include private sponsorships|false|
 |`pricing`|`cents` or `dollars`|The pricing by dollars or cents|false|
