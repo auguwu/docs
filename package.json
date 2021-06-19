@@ -9,7 +9,7 @@
   "bugs": "https://github.com/Noelware/camellia/issues",
   "scripts": {
     "clean:modules": "rm -rf node_modules/**/node_modules node_modules/@augu/**/node_modules node_modules/@types/**/node_modules",
-    "prepare": "npm run clean:node_modules",
+    "prepare": "npm run clean:modules",
     "build": "npm run lint && rm -rf build && tsc",
     "lint": "eslint src --ext .ts --fix"
   },
