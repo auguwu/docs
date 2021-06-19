@@ -16,9 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { HttpClient } from '@augu/orchid';
-import constants from '../../util/Constants';
+import { Service } from '@augu/lilith';
 
-export default new HttpClient({
-  userAgent: `Camellia (+https://github.com/Noelware/Camellia; v${constants.version})`
-});
+@Service({
+  priority: 0,
+  name: 'routing'
+})
+export default class RoutingService {}

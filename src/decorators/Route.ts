@@ -16,9 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { HttpClient } from '@augu/orchid';
-import constants from '../../util/Constants';
+/**
+ * Represents the metadata from `getRouteMeta(object)`
+ */
+export interface RouteMeta {
+  prefix: string;
+}
 
-export default new HttpClient({
-  userAgent: `Camellia (+https://github.com/Noelware/Camellia; v${constants.version})`
-});
+/**
+ * The route tag
+ */
+export const ROUTE_TAG = '椿: route';
+
+export const getRouteMeta = (target: any): RouteMeta | undefined => Reflect.getMetadata(ROUTE_TAG, target);
+export const Route = (prefix: string): MethodDecorator => {
+  return target => Reflect.defineMetadata(ROUTE_TAG, ({ prefix } as RouteMeta), target);
+};

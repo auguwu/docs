@@ -16,9 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { HttpClient } from '@augu/orchid';
-import constants from '../../util/Constants';
+import { DeclarationReflection } from 'typedoc/dist/lib/serialization/schema';
+import { ASTNodeKind } from '../constants';
+import ASTNode, { NodeFlags } from './AstNode';
 
-export default new HttpClient({
-  userAgent: `Camellia (+https://github.com/Noelware/Camellia; v${constants.version})`
-});
+export class EnumNode extends ASTNode {
+  constructor(
+    data: DeclarationReflection,
+    flags: NodeFlags
+  ) {
+    super(flags, ASTNodeKind.Enumeration, data);
+  }
+
+  parse() {
+    super.parse();
+  }
+}

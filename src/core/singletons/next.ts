@@ -16,9 +16,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { HttpClient } from '@augu/orchid';
 import constants from '../../util/Constants';
+import { join } from 'path';
+import next from 'next';
 
-export default new HttpClient({
-  userAgent: `Camellia (+https://github.com/Noelware/Camellia; v${constants.version})`
+export default next({
+  quiet: constants.environment !== 'development',
+  dir: join(process.cwd(), 'app'),
+  dev: constants.environment !== 'production',
+
+  conf: {
+    productionBrowserSourceMaps: true,
+    poweredByHeader: false,
+    trailingSlash: true,
+    images: {
+      domains: [
+        'cdn.floofy.dev'
+      ]
+    },
+
+    eslint: {
+      dirs: ['./src/app/components', './src/app/pages']
+    },
+
+    // add this here so next doesn't cry :^)
+    future: Object.create({}),
+    experimental: {
+      workerThreads: true
+    }
+  }
 });

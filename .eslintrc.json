@@ -1,3 +1,13 @@
 {
-  "extends": "@augu/eslint-config/ts.js"
+  "extends": [
+    "@augu/eslint-config/ts.js",
+    "next/core-web-vitals",
+    "next"
+  ],
+
+  "rules": {
+    "@next/next/no-head-import-in-document": "error",
+    "@next/next/no-document-import-in-page": "error",
+    "@next/next/no-html-link-for-pages": "error"
+  }
 }

@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * 椿 / Camellia is the documentation site for Noelware
  * Copyright (c) 2021-present Noelware
@@ -17,3 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+/**
+ * Represents the metadata from `getEndpointMeta(target)`.
+ */
+export interface EndpointMeta {
+  /**
+   * The prefix to use
+   */
+  prefix: string;
+}
+
+/**
+ * The endpoint tag
+ */
+export const ENDPOINT_TAG = '椿: endpoint';
+
+export const getEndpointMeta = (target: any): EndpointMeta | undefined => Reflect.getMetadata(ENDPOINT_TAG, target);
+export function Endpoint(prefix: string): ClassDecorator {
+  return target => Reflect.defineMetadata(ENDPOINT_TAG, ({
+    prefix
+  } as EndpointMeta), target);
+}

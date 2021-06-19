@@ -1,9 +1,11 @@
 {
-  "extends": "@augu/tsconfig",
+  "extends": "@augu/tsconfig/dom.json",
   "compilerOptions": {
     "types": ["node", "@augu/utils", "reflect-metadata"],
-    "outDir": "./build"
+    "rootDir": "./src",
+    "allowJs": true,
+    "jsx": "preserve"
   },
-  "include": ["src/**/*"],
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules"]
 }

@@ -16,9 +16,5 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { HttpClient } from '@augu/orchid';
-import constants from '../../util/Constants';
-
-export default new HttpClient({
-  userAgent: `Camellia (+https://github.com/Noelware/Camellia; v${constants.version})`
-});
+export * from './Endpoint';
+export * from './Route';
