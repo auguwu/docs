@@ -16,20 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ProjectRendererType } from './enums/ProjectType';
-import { ObjectType, Field } from 'type-graphql';
+import { Resolver, Query, Arg, Ctx } from 'type-graphql';
+import ProjectObject from '../objects/ProjectObject';
 
-@ObjectType()
-export default class ProjectObject {
-  @Field()
-  public description!: string;
-
-  @Field()
-  public lastUpdateAt!: Date;
-
-  @Field()
-  public renderer!: ProjectRendererType;
-
-  @Field()
-  public name!: string;
-}
+@Resolver(ProjectObject)
+export class ProjectsResolver {}

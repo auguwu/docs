@@ -16,11 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import type {
+  Request,
+  Response
+} from 'express';
+
 /**
  * Represents the metadata from `getRouteMeta(object)`
  */
 export interface RouteMeta {
-  prefix: string;
+  run(req: Request, res: Response): void | Promise<void>;
+
+  middleware: any[];
+  path: string;
 }
 
 /**
@@ -28,7 +36,16 @@ export interface RouteMeta {
  */
 export const ROUTE_TAG = '椿: route';
 
-export const getRouteMeta = (target: any): RouteMeta | undefined => Reflect.getMetadata(ROUTE_TAG, target);
-export const Route = (prefix: string): MethodDecorator => {
-  return target => Reflect.defineMetadata(ROUTE_TAG, ({ prefix } as RouteMeta), target);
+export const getRouteMeta = (target: any): RouteMeta[] => Reflect.getMetadata(ROUTE_TAG, target) ?? [];
+export const Route = (path: string, middleware?: any[]): MethodDecorator => {
+  return (target, _, descriptor: TypedPropertyDescriptor<any>) => {
+    const routes = getRouteMeta(target);
+    routes.push({
+      middleware: middleware ?? [],
+      path,
+      run: descriptor.value!
+    });
+
+    Reflect.defineMetadata(ROUTE_TAG, routes, target);
+  };
 };

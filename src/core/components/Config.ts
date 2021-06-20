@@ -33,7 +33,8 @@ interface Configuration {
 }
 
 interface ProjectConfig {
-  branches?: string[];
+  branches?: string | string[];
+  renderer: string;
   githubUrl: string;
   name: string;
 }
@@ -51,7 +52,7 @@ export default class Config {
   async load() {
     if (!existsSync(join(__dirname, '..', '..', 'config.yml'))) {
       const config = yaml.dump({
-
+        projects: []
       }, {
         indent: 2,
         noArrayIndent: false

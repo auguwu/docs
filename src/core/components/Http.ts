@@ -17,6 +17,7 @@
  */
 
 import { Component, Inject, ComponentAPI, Container, ComponentOrServiceHooks } from '@augu/lilith';
+import { ProjectsResolver } from '../../resolvers';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { Server } from 'http';
@@ -37,6 +38,7 @@ export interface HttpContext {
   name: 'http'
 })
 export default class HttpServer implements ComponentOrServiceHooks {
+  app!: ReturnType<typeof express>;
   api!: ComponentAPI;
 
   @Inject
@@ -52,7 +54,7 @@ export default class HttpServer implements ComponentOrServiceHooks {
     this.logger.info('✨ Launching documentation to the world~');
     const schema = await buildSchema({
       resolvers: [
-        () => null
+        ProjectsResolver
       ]
     });
 
@@ -65,7 +67,7 @@ export default class HttpServer implements ComponentOrServiceHooks {
       })
     });
 
-    const app = express()
+    const app = this.app = express()
       .use(cors());
 
     app.get('/assets', express.static(join(process.cwd(), 'static')));

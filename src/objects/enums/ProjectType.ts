@@ -16,20 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ProjectRendererType } from './enums/ProjectType';
-import { ObjectType, Field } from 'type-graphql';
+import { registerEnumType } from 'type-graphql';
 
-@ObjectType()
-export default class ProjectObject {
-  @Field()
-  public description!: string;
-
-  @Field()
-  public lastUpdateAt!: Date;
-
-  @Field()
-  public renderer!: ProjectRendererType;
-
-  @Field()
-  public name!: string;
+export enum ProjectRendererType {
+  TypeScript = 'typescript',
+  Markdown = 'markdown',
+  Kotlin = 'kotlin'
 }
+
+registerEnumType(ProjectRendererType, {
+  name: 'ProjectRendererType',
+  description: 'The project renderer type to use for retrieving doc data.',
+  valuesConfig: {
+    TypeScript: {
+      description: 'Returns information about a TypeScript project, it can return any class/type alias/interface metadata.'
+    },
+
+    Markdown: {
+      description: 'Returns the structure of a Markdown doc project.'
+    },
+
+    Kotlin: {
+      description: 'Returns the structure of a Kotlin doc project. It can provide the Markdown content or pieces of it.'
+    }
+  }
+});
