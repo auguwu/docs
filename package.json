@@ -34,7 +34,7 @@
     "postcss-import": "14.0.2",
     "progress": "2.0.3",
     "prom-client": "13.1.0",
-    "sass": "1.35.1",
+    "sass": "1.35.2",
     "shiki": "0.9.3",
     "simple-git": "2.40.0",
     "tailwindcss": "2.2.0",
