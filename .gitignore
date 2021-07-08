@@ -56,7 +56,6 @@ typings/
 
 # gatsby files
 .cache/
-public
 
 # Mac files
 .DS_Store
@@ -70,5 +69,15 @@ yarn-error.log
 
 # Config
 config.yml
+
+# Camellia cache files
 .camellia/
-build/
+
+# Compiled TypeScript for codegen/*
+.codegen/
+
+# Next.js build output
+.next/
+
+# Camellia git cache files
+.camellia-git/

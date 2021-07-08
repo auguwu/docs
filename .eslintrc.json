@@ -8,8 +8,6 @@
   "rules": {
     "@next/next/no-head-import-in-document": "error",
     "@next/next/no-document-import-in-page": "error",
-    "@next/next/no-html-link-for-pages": "error",
-    "@typescript-eslint/indent": ["error", 2],
-    "indent": "off"
+    "@next/next/no-html-link-for-pages": "error"
   }
 }
