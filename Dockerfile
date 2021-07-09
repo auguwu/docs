@@ -3,7 +3,7 @@ FROM node:16-alpine
 LABEL MAINTAINER="Noelware <cutie@floofy.dev>"
 RUN apk update && apk add git ca-certificates
 
-WORKDIR /opt/Nino
+WORKDIR /opt/camellia
 COPY . .
 RUN npm i -g typescript eslint
 RUN npm ci

@@ -21,3 +21,29 @@ on:
 jobs:
   build-container:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checks out the repository
+        uses: actions/checkout@v2
+
+      - name: Login to the registry
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login registry.floofy.dev -u august --password-stdin
+
+      - name: Build the container
+        run: docker build --no-cache . -t registry.floofy.dev/noelware/camellia:${{github.sha}}
+
+      - name: Push to the registry
+        run: docker push registry.floofy.dev/noelware/camellia:${{github.sha}}
+
+  deploy:
+    needs: build-container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Kubernetes
+        run: |
+          mkdir ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+      - name: Set tag
+        run: kubectl set image deployment/camellia camellia=registry.floofy.dev/noelware/camelia:${{github.sha}}
+
+      - name: Deploy to the bot
+        run: kubectl rollout status deployment/camellia
