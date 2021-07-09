@@ -30,13 +30,18 @@ export default class PawDocument extends Document {
         <link rel='shortcut icon' href='https://cdn.floofy.dev/images/trans.png' />
         <link rel='icon' href='https://cdn.floofy.dev/images/trans.png' />
         <meta charSet='UTF-8' />
-        <meta name='description' content='Student and developer in the United States who makes projects that no one will use. ☆*✲୧( ○ ╹ 〰 ╹ ○ )୨✲*☆' />
+        <meta name='description' content='Documentation for all of my projects that arent TypeScript or Kotlin. ❀ܓ(｡◠ ꇴ ◠｡ )' />
         <meta name='theme-color' content='#DAA2C6' />
-        <meta property='og:description' content='Student and developer in the United States who makes projects that no one will use. ☆*✲୧( ○ ╹ 〰 ╹ ○ )୨✲*☆' />
-        <meta property='og:title' content='Noel 🥀' />
-        <meta property='og:image' content='https://cdn.floofy.dev/images/August.png' />
+        <meta property='og:description' content='Documentation for all of my projects that arent TypeScript or Kotlin. ❀ܓ(｡◠ ꇴ ◠｡ )' />
+        {/* eslint-disable-next-line quotes */}
+        <meta property='og:title' content={`Noel's Documentation 💐`} />
+        <meta property='og:image' content='https://cdn.floofy.dev/images/trans.png' />
         <meta property='og:type' content='website' />
-        <meta property='og:url' content='https://floofy.dev' />
+        <meta property='og:url' content='https://docs.floofy.dev' />
+
+        <link rel='preconnect' href='https://fonts.googleapis.com' />
+        <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true' />
+        <link href='https://fonts.googleapis.com/css2?family=Indie+Flower&family=JetBrains+Mono&family=Nunito&family=Quicksand:wght@500&display=swap' rel='stylesheet' />
       </Head>
       <body>
         <Main />

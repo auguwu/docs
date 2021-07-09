@@ -16,9 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-module.exports = {
-  plugins: {
-    autoprefixer: {},
-    'postcss-import': {}
+$width: 100%;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+
+  @media only screen and (min-width: 640px) {
+    padding: 0 20px;
   }
-};
+}
+
+.container-content {
+  padding-bottom: 200px;
+}

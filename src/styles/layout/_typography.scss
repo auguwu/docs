@@ -16,16 +16,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-module.exports = {
-  mode: 'jit',
-  purge: [
-    'src/components/**.tsx',
-    'src/pages/**.tsx'
-  ],
-  darkMode: 'media',
-  theme: {
-    extend: {}
-  },
-  variants: {},
-  plugins: []
-};
+body {
+  background: #23272A;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.5em;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: #6289FF;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+code, pre {
+  font-family: 'Jetbrains Mono', monospace;
+  padding: 0.2em;
+  margin: 0;
+  font-size: 1.97em;
+}
+
+pre {
+  padding: 10px;
+
+  code {
+    padding: 0;
+    font-size: 100%;
+    background-color: transparent;
+  }
+}
+
+blockquote {
+  margin: 1em 0;
+  padding-left: 1em;
+  border-left: 4px solid #006069;
+}

@@ -1,12 +1,12 @@
 {
-	"name": "docs.floofy.dev",
-	"short_name": "docs.floofy.dev",
-	"theme_color": "#DAA2C6",
-	"background_color": "#343434",
-	"display": "browser",
-	"orientation": "portrait",
-	"scope": "/",
-	"start_url": "/",
+  "name": "docs.floofy.dev",
+  "short_name": "docs.floofy.dev",
+  "theme_color": "#DAA2C6",
+  "background_color": "#343434",
+  "display": "browser",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
   "icons": [
     {
       "src": "icons/icon-72x72.png",

@@ -1,6 +1,6 @@
 ---
-title: 'api.floofy.dev ("hana")'
-description: 'Starting page of docs.noelware.org/api'
+title: 'Hana'
+description: '花 / Hana is a API service mainly for proxying from one API to another API.'
 author: 'Noel (@auguwu)'
 ---
 
@@ -119,7 +119,7 @@ interface GitHubSponsorData {
 ```
 
 > Kotlin
-```kt
+```kotlin
 data class GitHubSponsorData(
   val total_count: Int,
   val data: List<GitHubSponsorUserData>
@@ -166,7 +166,7 @@ interface GitHubSponsorUserData {
 ```
 
 > Kotlin
-```kt
+```kotlin
 data class GitHubSponsorUserData(
   val tier_selected_at: String?,
   val twitter_handle: String?,
@@ -205,7 +205,7 @@ interface GitHubUserStatusData {
 
 > Kotlin
 
-```kt
+```kotlin
 data class GitHubUserStatusData(
   val expires_at: String?,
   val message: String,
@@ -238,7 +238,7 @@ interface GitHubSponsorTierData {
 
 ##### Kotlin
 
-```kt
+```kotlin
 data class GitHubSponsorTierData(
   val custom_amount: Boolean,
   val monthly_price: Int,
